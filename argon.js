@@ -3,6 +3,7 @@ var Argon = {
         console.log("injecting data into div")
         Blockly.HSV_SATURATION = 0.76;
         Blockly.HSV_VALUE = 0.78;
+        Blockly.BlockSvg.START_HAT = true;
        // player-area
         document.getElementById('player-area').setAttribute("style", 'height: '+(window.innerHeight).toString()+'px; width:' + 99 + '%');
         document.getElementById('blocklyDiv').setAttribute("style", 'height: '+(window.innerHeight-440).toString()+'px; width:' + 99 + '%');

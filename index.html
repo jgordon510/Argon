@@ -31,6 +31,7 @@
     <span class=full-screen></span>
   </div>
   <div class=player></div>
+  <div id="blocklyDiv" style="height: 480px; width: 900px;"></div>
   <div class=internal-error>
     An internal error occurred. <a id=error-bug-link target=_blank href=https://github.com/mittagskogel/sulfurous/issues/new>Click here</a> to file a bug report.
   </div>
@@ -41,9 +42,9 @@
   <input class=url value=https://scratch.mit.edu/projects/>
   <a target=_blank class=project-link title="View project on Scratch"></a>
 </div>
-<div id="blocklyDiv" style="height: 480px; width: 1000px;"></div>
+
 <div class=area id=project-area>
-  
+
   <section class=package>
     <h1>Package this project</h1>
     <p>Get a link to a web page that automatically runs your project.</p>
@@ -91,19 +92,21 @@
 <section>
   <h1>Credits</h1>
   <p>Sulfurous was created by <a href=https://github.com/mittagskogel>Mittagskogel</a> and is based off Phosphorus, which was created by <a href=https://github.com/nathan>Nathan Dinsmore</a>. Its CPS-style compilation and overall design was inspired by
-    <a
-      href=https://github.com/RHY3756547>Rhys Simpson</a>'s <a href=https://code.google.com/p/sb2-js/>sb2.js</a>. It would have more bugs if not for <a href=https://github.com/trumank>Truman Kilen</a>. It uses the <a href=https://stuk.github.io/jszip/>JSZip</a> library, created by <a href=https://github.com/stuk>Stuart Knightley</a>,
-      <a href=https://github.com/dduponchel>David Duponchel</a>, Franz Buchinger, and <a href=https://github.com/aadsm>António Afonso</a>, to read <code>.sb2</code> files and compressed projects, and the <a href=https://code.google.com/p/canvg/>canvg</a>
-      library, created by <a href=https://code.google.com/u/gabelerner@gmail.com/>Gabe Lerner</a>, to render SVGs in <code>&lt;canvas&gt;</code> elements.
-      <h1>Code</h1>
-      <p>The source code for sulfurous is available <a href=https://github.com/mittagskogel/sulfurous>on GitHub</a>. See <a href=https://github.com/nathan/phosphorus>Phosphorus</a> for the original version.</p>
+    <a href=https://github.com/RHY3756547>Rhys Simpson</a>'s <a href=https://code.google.com/p/sb2-js/>sb2.js</a>. It would have more bugs if not for <a href=https://github.com/trumank>Truman Kilen</a>. It uses the <a href=https://stuk.github.io/jszip/>JSZip</a>
+    library, created by <a href=https://github.com/stuk>Stuart Knightley</a>,
+    <a href=https://github.com/dduponchel>David Duponchel</a>, Franz Buchinger, and <a href=https://github.com/aadsm>António Afonso</a>, to read <code>.sb2</code> files and compressed projects, and the <a href=https://code.google.com/p/canvg/>canvg</a>
+    library, created by <a href=https://code.google.com/u/gabelerner@gmail.com/>Gabe Lerner</a>, to render SVGs in <code>&lt;canvas&gt;</code> elements.
+    <h1>Code</h1>
+    <p>The source code for sulfurous is available <a href=https://github.com/mittagskogel/sulfurous>on GitHub</a>. See <a href=https://github.com/nathan/phosphorus>Phosphorus</a> for the original version.</p>
 </section>
 <script src=fonts.js></script>
 <script src=https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.js></script>
 <script src="blockly_compressed.js"></script>
 <script src="blocks_motion.js"></script>
+<script src="blocks_data.js"></script>
 <script src="en.js"></script>
 <script src=xml2json.js></script>
+<script src=argon.js></script>
 <script src=phosphorus.js></script>
 <script src=player.js></script>
 <script>
@@ -335,10 +338,17 @@
     <block type="xpos:"></block>
     <block type="changeYposBy:"></block>
     <block type="ypos:"></block>
-    <block type="bounceOffEdge:"></block>
-    <block type="setRotationStyle:"></block>
+    <block type="bounceOffEdge"></block>
+    <block type="setRotationStyle"></block>
     <block type="xpos"></block>
     <block type="ypos"></block>
     <block type="heading"></block>
+    
+
+  </category>
+  <category name="Data" colour="32">
+    <block type="input"></block>
+    <block type="variable"></block>
+    <block type="list"></block>
   </category>
 </xml>

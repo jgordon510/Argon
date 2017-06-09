@@ -1,7 +1,24 @@
 <xml xmlns="http://www.w3.org/1999/xhtml">
-  <block type="forward:" id="it5[^=4QPfyX,##;rZ=." x="246" y="67"></block>
-</xml>
-
-<xml xmlns="http://www.w3.org/1999/xhtml">
-  <block type="forward:" id="it5[^=4QPfyX,##;rZ=." x="246" y="67"></block>
+  <block type="forward:" id="tM3yWIJBbN5Y3W690Tll" x="5" y="89">
+    <next>
+      <block type="turnRight:" id="gLCAnTKpYIvATf7989kt">
+        <next>
+          <block type="turnLeft:" id="FjsIBzADhNLFbbAdAL6u">
+            <next>
+              <block type="forward:" id="rMExk5nEHtCGx2fzIULA">
+                <next>
+                  <block type="turnRight:" id="ANBY0TulURsHAe0ei092">
+                    <next>
+                      <block type="turnLeft:" id="1LG9QoLkh5mJuZieV6xL"></block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+  <block type="forward:" id="z%HT|Q.CSxEFicmYzh%n" x="335" y="86"></block>
 </xml>

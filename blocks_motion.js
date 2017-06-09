@@ -18,17 +18,9 @@
  * limitations under the License.
  */
 
-/**
- * @fileoverview Colour blocks for Blockly.
- *
- * This file is scraped to extract a .json file of block definitions. The array
- * passed to defineBlocksWithJsonArray(..) must be strict JSON: double quotes
- * only, no outside references, no functions, no trailing commas, etc. The one
- * exception is end-of-line comments, which the scraper will remove.
- * @author fraser@google.com (Neil Fraser)
- */
+
 'use strict';
-console.log("color block load")
+console.log("movement block load");
 goog.provide('Blockly.Blocks.colour'); // Deprecated
 goog.provide('Blockly.Constants.Colour');
 
@@ -53,9 +45,8 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE1"
     }]
-
   },
   {
     "type": "turnRight:",
@@ -65,9 +56,8 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE1"
     }]
-
   },
   {
     "type": "turnLeft:",
@@ -77,9 +67,8 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE1"
     }]
-
   },
   {
     "type": "heading:",
@@ -89,9 +78,8 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE1"
     }]
-
   },
   {
     "type": "pointTowards:",
@@ -107,7 +95,6 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
         [ "other sprite here", "ITEM2" ]
       ]
     }]
-
   },
   {
     "type": "gotoX:y:",
@@ -118,12 +105,11 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     
     "args0": [{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE1"
     },{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE2"
     }]
-
   },
   {
     "type": "gotoSpriteOrMouse:",
@@ -140,7 +126,6 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
         [ "other sprite here", "ITEM3" ]
       ]
     }]
-
   },
   {
     "type": "glideSecs:toX:y:elapsed:from:",
@@ -150,13 +135,13 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE1"
     },{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE2"
     },{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE3"
     }]
 
   },{
@@ -167,7 +152,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE1"
     }]
   },{
     "type": "xpos:",
@@ -177,7 +162,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE1"
     }]
   },{
     "type": "changeYposBy:",
@@ -187,7 +172,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE1"
     }]
   },{
     "type": "ypos:",
@@ -197,18 +182,18 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "input_value",
-      "name": "VALUE"
+      "name": "VALUE1"
     }]
   },
   {
-    "type": "bounceOffEdge:",
+    "type": "bounceOffEdge",
     "message0": "if on edge, bounce",
     "colour":225,
     "nextStatement": null,
     "previousStatement": null
   },
   {
-    "type": "setRotationStyle:",
+    "type": "setRotationStyle",
     "message0": "set rotation style %1",
     "colour":225,
     "nextStatement": null,
@@ -240,7 +225,5 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "message0": "direction",
     "colour":225,
     "output": "Number"
-  },
-
-  
+  }
 ]); // END JSON EXTRACT (Do not delete this comment.)

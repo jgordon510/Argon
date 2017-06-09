@@ -102,7 +102,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "colour":225,
     "nextStatement": null,
     "previousStatement": null,
-    
+    "lastDummyAlign0": "RIGHT", //why not working?
     "args0": [{
       "type": "input_value",
       "name": "VALUE1"

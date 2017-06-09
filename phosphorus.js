@@ -652,7 +652,6 @@ var P = (function() {
 
   IO.loadBase = function(data) {
     //pass a copy of the data for argon to render the blocks
-    console.log(data)
     Argon.renderBlocks(JSON.parse(JSON.stringify(data)));
     data.scripts = data.scripts || [];
     data.costumes = IO.loadArray(data.costumes, IO.loadCostume);

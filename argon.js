@@ -3,6 +3,9 @@ var Argon = {
         console.log("injecting data into div")
         Blockly.HSV_SATURATION = 0.76;
         Blockly.HSV_VALUE = 0.78;
+       // player-area
+        document.getElementById('player-area').setAttribute("style", 'height: '+(window.innerHeight).toString()+'px; width:' + 99 + '%');
+        document.getElementById('blocklyDiv').setAttribute("style", 'height: '+(window.innerHeight-440).toString()+'px; width:' + 99 + '%');
         window.workspace = Blockly.inject('blocklyDiv', {
             toolbox: document.getElementById('toolbox'),
             zoom: {
@@ -29,7 +32,7 @@ var Argon = {
                 scriptObj.block = {
                     _type: blockArray[0],
                     _id: makeid(),
-                    value:[],
+                    value: [],
                     _x: script[0],
                     _y: script[1],
                 };
@@ -43,7 +46,7 @@ var Argon = {
                         var blockObj = {
                             _type: blockArray[0],
                             _id: makeid(),
-                            value:[]
+                            value: []
                         };
 
                         block.next = {
@@ -58,7 +61,7 @@ var Argon = {
                     console.log(scriptObj.block, scriptData)
                     for (var i = 1; i < scriptData.length; i++) {
                         console.log(scriptData[i])
-                        scriptObj.block.value.push( {
+                        scriptObj.block.value.push({
                             _name: "VALUE" + i.toString(),
                             block: {
                                 _type: "input",

@@ -39,7 +39,7 @@ Blockly.Blocks.colour.HUE = Blockly.Constants.Colour.HUE;
 Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
   {
     "type": "whenGreenFlag",
-    "message0": 'When ⚑ is clicked',
+    "message0": 'When ⚑  clicked',
     "colour": 20,
     "nextStatement": null
   }

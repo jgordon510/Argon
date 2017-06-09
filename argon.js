@@ -38,11 +38,11 @@ var Argon = {
                     _y: script[1],
                 };
                 addInputs(scriptObj, blockArray)
-                console.log(JSON.parse(JSON.stringify(scriptObj)))
                 addBlock(scriptObj.block);
 
                 function addBlock(block) {
                     if (script[2].length > 0) {
+                        console.log(script[2].toString())
                         var blockArray = script[2].shift();
                         var blockObj = {
                             _type: blockArray[0],

@@ -30,15 +30,16 @@ var Argon = {
             data.scripts.forEach(function(script) {
 
                 var blockArray = script[2].shift()
-                scriptObj.block = {
+                var newBlock = {
                     _type: blockArray[0],
                     _id: makeid(),
                     value: [],
                     _x: script[0],
                     _y: script[1],
-                };
+                } 
+                scriptObj.block.push(newBlock);
                 addInputs(scriptObj, blockArray)
-                addBlock(scriptObj.block);
+                addBlock(scriptObj.block[scriptObj.block.length-1]);
 
                 function addBlock(block) {
                     if (script[2].length > 0) {

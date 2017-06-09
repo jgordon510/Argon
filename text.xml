@@ -1,24 +1,24 @@
-<xml xmlns="http://www.w3.org/1999/xhtml">
-  <block type="forward:" id="tM3yWIJBbN5Y3W690Tll" x="5" y="89">
+<xml xmlns='http://www.w3.org/1999/xhtml'>
+  <block type='whenGreenFlag' id='qv9ASXZWvoJIh7VJWLOg' x='10' y='10'>
+    <value/>
     <next>
-      <block type="turnRight:" id="gLCAnTKpYIvATf7989kt">
-        <next>
-          <block type="turnLeft:" id="FjsIBzADhNLFbbAdAL6u">
-            <next>
-              <block type="forward:" id="rMExk5nEHtCGx2fzIULA">
-                <next>
-                  <block type="turnRight:" id="ANBY0TulURsHAe0ei092">
-                    <next>
-                      <block type="turnLeft:" id="1LG9QoLkh5mJuZieV6xL"></block>
-                    </next>
-                  </block>
-                </next>
-              </block>
-            </next>
+      <block type='startScene' id='dC2D0a8SwJaHeBWpIMHC'>
+        <value name='VALUE1'>
+          <block type='input' id='8op1i0JRM5aHkOjNztkI'>
+            <field name='FIELDNAME'>backdrop1</field>
           </block>
-        </next>
+        </value>
       </block>
     </next>
   </block>
-  <block type="forward:" id="z%HT|Q.CSxEFicmYzh%n" x="335" y="86"></block>
+</xml>
+
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="whenGreenFlag" id="yrslL0aHwsHoZzLIpGg4" x="10" y="10">
+    <next>
+      <block type="startScene:" id="5+CffQ3@}VD(eD^VvAB2">
+        <field name="FIELDNAME">ITEM1</field>
+      </block>
+    </next>
+  </block>
 </xml>

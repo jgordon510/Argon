@@ -238,5 +238,23 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
       "type": "input_value",
       "name": "VALUE1"
     }]
+  },
+  {
+    "type": "costumeIndex",
+    "message0": "costume #",
+    "colour":225,
+    "output": null
+  },
+  {
+    "type": "sceneName",
+    "message0": "backdrop name",
+    "colour":225,
+    "output": null
+  },
+  {
+    "type": "scale",
+    "message0": "size",
+    "colour":225,
+    "output": null
   }
 ]); // END JSON EXTRACT (Do not delete this comment.)

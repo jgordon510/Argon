@@ -1,23 +1,23 @@
 <xml xmlns='http://www.w3.org/1999/xhtml'>
-  <block type='whenGreenFlag' id='qv9ASXZWvoJIh7VJWLOg' x='10' y='10'>
+  <block type='whenGreenFlag' id='CtnsO2s9Nj3uTZ8VdocV' x='33' y='66'>
     <value/>
     <next>
-      <block type='startScene' id='dC2D0a8SwJaHeBWpIMHC'>
-        <value name='VALUE1'>
-          <block type='input' id='8op1i0JRM5aHkOjNztkI'>
-            <field name='FIELDNAME'>backdrop1</field>
+      <block type='putPenDown' id='SjP7cHcQ0a1JEvqFNCrY'>
+        <value/>
+        <next>
+          <block type='putPenUp' id='HBXWqS6TDuarWHzlYFR1'>
+            <value/>
+            <next>
+              <block type='doRepeat' id='gucXG9dJSl9l7kLB9sew'>
+                <value name='VALUE1'>
+                  <block type='input' id='TBTYUu3R6QUHjNsjZTDl'>
+                    <field name='FIELDNAME'>10</field>
+                  </block>
+                </value>
+              </block>
+            </next>
           </block>
-        </value>
-      </block>
-    </next>
-  </block>
-</xml>
-
-<xml xmlns="http://www.w3.org/1999/xhtml">
-  <block type="whenGreenFlag" id="yrslL0aHwsHoZzLIpGg4" x="10" y="10">
-    <next>
-      <block type="startScene:" id="5+CffQ3@}VD(eD^VvAB2">
-        <field name="FIELDNAME">ITEM1</field>
+        </next>
       </block>
     </next>
   </block>

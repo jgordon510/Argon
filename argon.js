@@ -4,9 +4,9 @@ var Argon = {
         Blockly.HSV_SATURATION = 0.76;
         Blockly.HSV_VALUE = 0.78;
         Blockly.BlockSvg.START_HAT = true;
-       // player-area
-        document.getElementById('player-area').setAttribute("style", 'height: '+(window.innerHeight).toString()+'px; width:' + 99 + '%');
-        document.getElementById('blocklyDiv').setAttribute("style", 'height: '+(window.innerHeight-440).toString()+'px; width:' + 99 + '%');
+        // player-area
+        document.getElementById('player-area').setAttribute("style", 'height: ' + (window.innerHeight).toString() + 'px; width:' + 99 + '%');
+        document.getElementById('blocklyDiv').setAttribute("style", 'height: ' + (window.innerHeight - 440).toString() + 'px; width:' + 99 + '%');
         window.workspace = Blockly.inject('blocklyDiv', {
             toolbox: document.getElementById('toolbox'),
             zoom: {
@@ -36,19 +36,19 @@ var Argon = {
                     value: [],
                     _x: script[0],
                     _y: script[1],
-                } 
+                }
                 scriptObj.block.push(newBlock);
                 addInputs(scriptObj, blockArray)
-                addBlock(scriptObj.block[scriptObj.block.length-1]);
+                addBlock(scriptObj.block[scriptObj.block.length - 1]);
 
                 function addBlock(block) {
                     if (script[2].length > 0) {
-                        console.log(script[2].toString())
                         var blockArray = script[2].shift();
                         var blockObj = {
                             _type: blockArray[0],
                             _id: makeid(),
-                            value: []
+                            value: [],
+                            statement: []
                         };
 
                         block.next = {
@@ -60,20 +60,41 @@ var Argon = {
                 }
 
                 function addInputs(scriptObj, scriptData) {
-                    console.log(scriptObj.block, scriptData)
                     for (var i = 1; i < scriptData.length; i++) {
-                        console.log(scriptData[i])
-                        scriptObj.block.value.push({
-                            _name: "VALUE" + i.toString(),
-                            block: {
-                                _type: "input",
-                                _id: makeid(),
-                                field: {
-                                    __text: scriptData[i].toString(),
-                                    _name: "FIELDNAME"
-                                }
+                        if (scriptData[i] != null) {
+                            //here we've found an array of new blocks nested in our existing block
+                            //we'll need to add each of them, possibly calling this function again recusively
+                            if (typeof scriptData[i] === 'object') { //an array
+                                scriptData[i].forEach(function(block) {
+                                    scriptObj.block.statement.push({
+                                        _name: "VALUE" + i.toString(),
+                                        block: {
+                                            _type: block[0],
+                                            _id: makeid(),
+                                            value: [],
+                                            statement: []
+                                        }
+                                    });
+                                    addInputs(scriptObj.block.statement[scriptObj.block.statement.length - 1], block)
+                                });
+
                             }
-                        })
+                            else {
+                                scriptObj.block.value.push({
+                                    _name: "VALUE" + i.toString(),
+                                    block: {
+                                        _type: "input",
+                                        _id: makeid(),
+                                        field: {
+                                            __text: scriptData[i].toString(),
+                                            _name: "FIELDNAME"
+                                        }
+                                    }
+                                });
+                            }
+
+                        }
+
                     }
 
                 }

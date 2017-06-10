@@ -156,5 +156,32 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
         [ "other scripts in this sprite", "ITEM3" ]
       ]
     }]
+  },
+  {
+    "type": "whenCloned",
+    "message0": "When I start as a clone",
+    "colour": 43,
+    "nextStatement": null
+  },
+  {
+    "type": "createCloneOf",
+    "message0": "create a clone of %1",
+    "colour":43,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "field_dropdown",
+      "name": "VALUE1",
+      "options": [
+        [ "myself", "_myself_" ],
+        [ "Sprite1", "ITEM2" ]
+      ]
+    }]
+  },
+  {
+    "type": "deleteClone",
+    "message0": "delete clone",
+    "colour":43,
+    "previousStatement": null
   }
 ]); // END JSON EXTRACT (Do not delete this comment.)

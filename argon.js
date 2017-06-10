@@ -28,8 +28,9 @@ var Argon = {
             };
 
             data.scripts.forEach(function(script) {
-
+                var blocksDown = 0;
                 var blockArray = script[2].shift()
+                
                 var newBlock = {
                     _type: blockArray[0],
                     _id: makeid(),
@@ -39,9 +40,12 @@ var Argon = {
                 }
                 scriptObj.block.push(newBlock);
                 addInputs(scriptObj, blockArray)
-                addBlock(scriptObj.block[scriptObj.block.length - 1]);
+                console.log(blockArray)
+                
+                addBlock(scriptObj.block[scriptObj.block.length - 1], blockArray);
 
-                function addBlock(block) {
+                function addBlock(block, blockArray) {
+                    console.log(block, blockArray)
                     if (script[2].length > 0) {
                         var blockArray = script[2].shift();
                         var blockObj = {
@@ -55,16 +59,31 @@ var Argon = {
                             block: blockObj
                         };
                         addInputs(block.next, blockArray)
-                        addBlock(block.next.block);
+                        console.log("adding block")
+                        console.log(block.next.block.statement.length)
+                        if(block.next.block.statement.length>0)
+                        {
+                            console.log(block)
+                            
+                            addBlock(block.next.block, blockArray);
+                            
+                        } else
+                        {
+                            addBlock(block.next.block, blockArray);
+                        }
+                        
                     }
                 }
 
                 function addInputs(scriptObj, scriptData) {
+                    console.log(scriptObj, scriptData)
                     for (var i = 1; i < scriptData.length; i++) {
                         if (scriptData[i] != null) {
                             //here we've found an array of new blocks nested in our existing block
                             //we'll need to add each of them, possibly calling this function again recusively
                             if (typeof scriptData[i] === 'object') { //an array
+                                console.log("test")
+                                scriptData[i].reverse()
                                 scriptData[i].forEach(function(block) {
                                     scriptObj.block.statement.push({
                                         _name: "VALUE" + i.toString(),
@@ -72,11 +91,16 @@ var Argon = {
                                             _type: block[0],
                                             _id: makeid(),
                                             value: [],
-                                            statement: []
+                                            statement: [],
+                                            next: []
                                         }
                                     });
+                                    
+                                    console.log(JSON.parse(JSON.stringify(script[2])));
                                     addInputs(scriptObj.block.statement[scriptObj.block.statement.length - 1], block)
+      
                                 });
+
 
                             }
                             else {
@@ -94,12 +118,8 @@ var Argon = {
                             }
 
                         }
-
                     }
-
                 }
-
-
             });
             var x2js = new X2JS();
             var finalObject = {

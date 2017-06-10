@@ -42,10 +42,12 @@ var Argon = {
                     value: [], //a place to store the input value (repeat loop or something)
                     _x: script[0], //the xLoc
                     _y: script[1], //the yLoc
+                    statement: []
                 };
                 //add the new block to the scriptObj block array
                 scriptObj.block.push(newBlock);
                 //add the inputs to the top block
+                console.log("this one")
                 addInputs({
                     block: newBlock //could add the last block of scriptObj instead here
                 }, blockArray);
@@ -71,6 +73,7 @@ var Argon = {
                             block: blockObj
                         };
                         //add any inputs to the block
+                        console.log("this one")
                         addInputs(targetBlock.next, blockArray);
                         //recursion until the blocks are used used up from the shift
                         addNextBlock(targetBlock.next.block);
@@ -92,6 +95,7 @@ var Argon = {
                                 blockArray[i].reverse();
                                 //go through the blocks adding each to the statement
                                 blockArray[i].forEach(function(block) {
+                                    console.log(scriptObj.block)
                                     var position = scriptObj.block.statement.push({
                                         _name: "VALUE" + i.toString(),
                                         block: {
@@ -107,31 +111,31 @@ var Argon = {
                                     addInputs(scriptObj.block.statement[position - 1], block);
                                 }); //end of statement forEach
                             }
-                            else { //just a regular input
-
-                                //dropdown values begin with '_'
-                                if (blockArray[i][0] == '_') { //dropdown
-                                    //just define the field
-                                    scriptObj.block.field = {
-                                        __text: blockArray[i].toString(),
-                                        _name: "FIELDNAME"
+                            else { 
+                                //just a regular input
+                                //we treat every input as if it's a regular input block
+                                //and a dropdown.  The duplication doesn't hurt, and
+                                //there isn't an easy way to tell the difference, without
+                                //making a reference list
+                                
+                                //we need to create the input block
+                                scriptObj.block.value.push({
+                                    _name: "VALUE" + i.toString(),
+                                    block: {
+                                        _type: "input",
+                                        _id: makeid(),
+                                        field: [{
+                                            __text: blockArray[i].toString(),
+                                            _name: "FIELDNAME"
+                                        }]
                                     }
-                                }
-                                else { //regular value
-                                    //we need to create the input block
-                                    scriptObj.block.value.push({
-                                        _name: "VALUE" + i.toString(),
-                                        block: {
-                                            _type: "input",
-                                            _id: makeid(),
-                                            field: {
-                                                __text: blockArray[i].toString(),
-                                                _name: "FIELDNAME"
-                                            }
-                                        }
-                                    });
-                                }
-
+                                });
+                                //we'll also set the drop down field
+                                if (typeof scriptObj.block.field === 'undefined') scriptObj.block.field = [];
+                                scriptObj.block.field.push({
+                                    __text: blockArray[i].toString(),
+                                    _name: "VALUE" + i.toString()
+                                });
                             }
 
                         }

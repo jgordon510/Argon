@@ -48,7 +48,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "args0": [{
       "type": "input_value",
       "name": "VALUE1",
-      "check": "Number"
+      "check": null
     }],
     "message1": "%1",
     "args1": [{
@@ -58,5 +58,103 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "nextStatement": null,
     "colour": 43
+  }, {
+    "type": "wait:elapsed:from:",
+    "message0": "wait %1 secs",
+    "colour": 43,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": null
+    }]
+  }, {
+    "type": "doForever",
+    "message0": "forever",
+    "message1": "%1",
+    "args1": [{
+      "type": "input_statement",
+      "name": "VALUE1"
+    }],
+    "previousStatement": null,
+    "colour": 43
+  }, {
+    "type": "doIf",
+    "message0": "if %1 then",
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "Boolean"
+    }],
+    "message1": "%1",
+    "args1": [{
+      "type": "input_statement",
+      "name": "VALUE2"
+    }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 43
+  }, {
+    "type": "doIfElse",
+    "message0": "if %1 then %2 else %3",
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "Boolean"
+    }, {
+      "type": "input_statement",
+      "name": "VALUE2"
+    }, {
+      "type": "input_statement",
+      "name": "VALUE3"
+    }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 43
+  },
+   {
+    "type": "doWaitUntil",
+    "message0": "wait until %1",
+    "colour": 43,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "Boolean"
+    }]
+  },{
+    "type": "doUntil",
+    "message0": "repeat until %1",
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "boolean"
+    }],
+    "message1": "%1",
+    "args1": [{
+      "type": "input_statement",
+      "name": "VALUE2"
+    }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 43
+  },
+  {
+    "type": "stopScripts",
+    "message0": "stop %1",
+    "colour":43,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "field_dropdown",
+      "name": "VALUE1",
+      "options": [
+        [ "all", "ITEM1" ],
+        [ "this script", "ITEM2" ],
+        [ "other scripts in this sprite", "ITEM3" ]
+      ]
+    }]
   }
 ]); // END JSON EXTRACT (Do not delete this comment.)

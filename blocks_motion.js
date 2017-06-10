@@ -121,9 +121,9 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "field_dropdown",
-      "name": "FIELDNAME",
+      "name": "VALUE1",
       "options": [
-        [ "mouse-pointer", "ITEM1" ],
+        [ "mouse-pointer", "_mouse_" ],
         [ "random position", "_random_"],
         [ "other sprite here", "ITEM3" ]
       ]

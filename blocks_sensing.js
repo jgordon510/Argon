@@ -20,7 +20,7 @@
 
 
 'use strict';
-console.log("data block load");
+console.log("sensing block load");
 goog.provide('Blockly.Blocks.colour'); // Deprecated
 goog.provide('Blockly.Constants.Colour');
 
@@ -32,43 +32,29 @@ goog.require('Blockly.Blocks');
  * This should be the same as Blockly.Msg.COLOUR_HUE.
  * @readonly
  */
-Blockly.Constants.Colour.HUE = 32;
+Blockly.Constants.Colour.HUE = 200;
 /** @deprecated Use Blockly.Constants.Colour.HUE */
 Blockly.Blocks.colour.HUE = Blockly.Constants.Colour.HUE;
 
 
-//value
 
+   
+    // <block type="comeToFront"></block>0
+    // <block type="goBackByLayers:"></block>1
 Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
-  {
-    "type": "input",
-    "message0": '%1',
+ {
+    "type": "touching:",
+    "message0": 'touching %1',
     "args0": [{
-      "type": "field_input",
-      "name": "FIELDNAME",
-      "text": "100"
+      "type": "field_dropdown",
+      "name": "VALUE1",
+      "options": [
+        [ "mouse-pointer", "_mouse_" ],
+        [ "edge", "_edge_"],
+        [ "other sprite here", "ITEM3" ]
+      ]
     }],
-    "colour": 32,
-    "output": "Value"
-  }, {
-    "type": "variable",
-    "message0": "variable: %1",
-    "args0": [{
-      "type": "field_variable",
-      "name": "FIELDNAME",
-      "variable": "x"
-    }],
-    "colour": 32,
-    "output": "Value"
-  },{
-    "type": "list",
-    "message0": "list: %1",
-    "args0": [{
-      "type": "field_variable",
-      "name": "FIELDNAME",
-      "variable": "myList"
-    }],
-    "colour": 20,
-    "output": "Value"
+    "colour": 200,
+    "output": "Boolean"
   }
 ]); // END JSON EXTRACT (Do not delete this comment.)

@@ -34,7 +34,7 @@ var Argon = {
             data.scripts.forEach(function(script) {
                 //a blockArray to hold the new script blocks
                 var blockArray = script[2].shift()
-
+                
                 //the top block of the script
                 var newBlock = {
                     _type: blockArray[0], //the block name
@@ -47,11 +47,10 @@ var Argon = {
                 //add the new block to the scriptObj block array
                 scriptObj.block.push(newBlock);
                 //add the inputs to the top block
-                console.log("this one")
                 addInputs({
                     block: newBlock //could add the last block of scriptObj instead here
                 }, blockArray);
-
+                
 
                 addNextBlock(scriptObj.block[scriptObj.block.length - 1]);
 
@@ -73,7 +72,6 @@ var Argon = {
                             block: blockObj
                         };
                         //add any inputs to the block
-                        console.log("this one")
                         addInputs(targetBlock.next, blockArray);
                         //recursion until the blocks are used used up from the shift
                         addNextBlock(targetBlock.next.block);
@@ -81,21 +79,27 @@ var Argon = {
                 }
 
                 function addInputs(scriptObj, blockArray) {
-                    console.log(scriptObj, blockArray);
                     //go through the blockArray starting with the 1st input
                     //which is at index 1
+                    
                     for (var i = 1; i < blockArray.length; i++) {
                         //ignore null values
                         if (blockArray[i] != null) {
                             //here we've found an array of new blocks nested in our existing block
                             //we'll need to add each of them, possibly calling this function again recusively
                             if (typeof blockArray[i] === 'object') { //an array actually
+                                //check to make sure the block is formatted as an array
+                                //in the case of control inputs (etc.), they must be formatted
+                                //statements come in an array already
+                                if(typeof blockArray[i][0]==="string")
+                                {
+                                    blockArray[i] = [blockArray[i]];
+                                }
                                 //for some reason they come reversed
                                 //remember this when you're working on saving
                                 blockArray[i].reverse();
                                 //go through the blocks adding each to the statement
                                 blockArray[i].forEach(function(block) {
-                                    console.log(scriptObj.block)
                                     var position = scriptObj.block.statement.push({
                                         _name: "VALUE" + i.toString(),
                                         block: {

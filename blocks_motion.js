@@ -32,7 +32,7 @@ goog.require('Blockly.Blocks');
  * This should be the same as Blockly.Msg.COLOUR_HUE.
  * @readonly
  */
-Blockly.Constants.Colour.HUE = 20;
+Blockly.Constants.Colour.HUE = 225;
 /** @deprecated Use Blockly.Constants.Colour.HUE */
 Blockly.Blocks.colour.HUE = Blockly.Constants.Colour.HUE;
 
@@ -122,7 +122,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
       "name": "FIELDNAME",
       "options": [
         [ "mouse-pointer", "ITEM1" ],
-        [ "random position", "ITEM2" ],
+        [ "random position", "_random_"],
         [ "other sprite here", "ITEM3" ]
       ]
     }]

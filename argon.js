@@ -1,21 +1,23 @@
 var Argon = {
     loadBlockly: function() {
         console.log("injecting data into div")
-        Blockly.HSV_SATURATION = 0.76;
-        Blockly.HSV_VALUE = 0.78;
+            //these S&V values can be changed to effect the overall look
+        Blockly.HSV_SATURATION = 0.9;
+        Blockly.HSV_VALUE = 0.8;
+        //scratch-style event blocks
         Blockly.BlockSvg.START_HAT = true;
-        // player-area
+        // player-area should take the whole screen vertically
         document.getElementById('player-area').setAttribute("style", 'height: ' + (window.innerHeight).toString() + 'px; width:' + 99 + '%');
+        // blockly div should fill the space below the player
         document.getElementById('blocklyDiv').setAttribute("style", 'height: ' + (window.innerHeight - 440).toString() + 'px; width:' + 99 + '%');
         window.workspace = Blockly.inject('blocklyDiv', {
             toolbox: document.getElementById('toolbox'),
-            zoom: {
+            zoom: { //this allows zooming the workspace
                 controls: true,
-                wheel: true,
                 startScale: 0.8,
                 maxScale: 3,
                 minScale: 0.3,
-                scaleSpeed: 1.2
+                scaleSpeed: 1.1
             }
         });
     },
@@ -31,7 +33,7 @@ var Argon = {
 
             data.scripts.forEach(function(script) {
                 //a blockArray to hold the new script blocks
-                var blockArray = script[2].shift() 
+                var blockArray = script[2].shift()
 
                 //the top block of the script
                 var newBlock = {
@@ -48,7 +50,7 @@ var Argon = {
                     block: newBlock //could add the last block of scriptObj instead here
                 }, blockArray);
 
-                
+
                 addNextBlock(scriptObj.block[scriptObj.block.length - 1]);
 
                 function addNextBlock(targetBlock) {
@@ -63,7 +65,7 @@ var Argon = {
                             value: [],
                             statement: []
                         };
-                        
+
                         //add the block to the next of the targetBlock
                         targetBlock.next = {
                             block: blockObj
@@ -102,22 +104,34 @@ var Argon = {
                                     });
                                     //add any inputs here
                                     //position is one more than the index of the statement 
-                                    addInputs(scriptObj.block.statement[position-1], block);
+                                    addInputs(scriptObj.block.statement[position - 1], block);
                                 }); //end of statement forEach
                             }
-                            else {  //just a regular input
-                                //push it onto the value stack
-                                scriptObj.block.value.push({
-                                    _name: "VALUE" + i.toString(),
-                                    block: {
-                                        _type: "input",
-                                        _id: makeid(),
-                                        field: {
-                                            __text: blockArray[i].toString(),
-                                            _name: "FIELDNAME"
-                                        }
+                            else { //just a regular input
+                                
+                                //dropdown values begin with '_'
+                                if (blockArray[i][0] == '_') { //dropdown
+                                    //just define the field
+                                    scriptObj.block.field = {
+                                        __text: blockArray[i].toString(),
+                                        _name: "FIELDNAME"
                                     }
-                                });
+                                }
+                                else { //regular value
+                                    //we need to create the input block
+                                    scriptObj.block.value.push({
+                                        _name: "VALUE" + i.toString(),
+                                        block: {
+                                            _type: "input",
+                                            _id: makeid(),
+                                            field: {
+                                                __text: blockArray[i].toString(),
+                                                _name: "FIELDNAME"
+                                            }
+                                        }
+                                    });
+                                }
+
                             }
 
                         }
@@ -126,15 +140,15 @@ var Argon = {
             });
             //make a new X2JS conversion object
             var x2js = new X2JS();
-            
+
             //wrap the scriptObj in an xml tag (could be done above)
             var finalObject = {
-                xml: {
-                    _xmlns: "http://www.w3.org/1999/xhtml",
-                    block: scriptObj.block
+                    xml: {
+                        _xmlns: "http://www.w3.org/1999/xhtml",
+                        block: scriptObj.block
+                    }
                 }
-            }
-            //make the xmlText for blockly
+                //make the xmlText for blockly
             var xmlText = x2js.json2xml_str(finalObject)
             console.log(xmlText)
             if (xmlText) {
@@ -144,7 +158,6 @@ var Argon = {
                 Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xmlText), Blockly.mainWorkspace);
             }
         }
-        
         //this makes a random 20-char id
         function makeid() {
             var text = "";

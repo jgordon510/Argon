@@ -36,6 +36,9 @@ Blockly.Constants.Colour.HUE = 32;
 /** @deprecated Use Blockly.Constants.Colour.HUE */
 Blockly.Blocks.colour.HUE = Blockly.Constants.Colour.HUE;
 
+
+//value
+
 Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
   {
     "type": "input",

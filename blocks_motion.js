@@ -45,12 +45,13 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "previousStatement": null,
     "args0": [{
       "type": "input_value",
-      "name": "VALUE1"
+      "name": "VALUE1",
+      "check": null
     }]
   },
   {
     "type": "turnRight:",
-    "message0": "turn ↷ %1 degrees",
+    "message0": "turn ⟳ %1 degrees",
     "colour":225,
     "nextStatement": null,
     "previousStatement": null,
@@ -61,7 +62,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
   },
   {
     "type": "turnLeft:",
-    "message0": "turn ↶ %1 degrees",
+    "message0": "turn ⟲ %1 degrees",
     "colour":225,
     "nextStatement": null,
     "previousStatement": null,
@@ -102,6 +103,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "colour":225,
     "nextStatement": null,
     "previousStatement": null,
+    "inputsInline": true,
     "lastDummyAlign0": "RIGHT", //why not working?
     "args0": [{
       "type": "input_value",

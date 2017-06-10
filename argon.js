@@ -108,7 +108,7 @@ var Argon = {
                                 }); //end of statement forEach
                             }
                             else { //just a regular input
-                                
+
                                 //dropdown values begin with '_'
                                 if (blockArray[i][0] == '_') { //dropdown
                                     //just define the field
@@ -143,14 +143,27 @@ var Argon = {
 
             //wrap the scriptObj in an xml tag (could be done above)
             var finalObject = {
-                    xml: {
-                        _xmlns: "http://www.w3.org/1999/xhtml",
-                        block: scriptObj.block
-                    }
+                xml: {
+                    _xmlns: "http://www.w3.org/1999/xhtml",
+                    block: scriptObj.block
                 }
-                //make the xmlText for blockly
+            }
+
+            //make the xmlText for blockly
             var xmlText = x2js.json2xml_str(finalObject)
+
+            //these will prevent null warnings on blank statements and values
+            xmlText = replaceAll(xmlText, '<value/>', '');
+            xmlText = replaceAll(xmlText, '<statement/>', '');
+
+            //this function replaces all occurences of a string within a string
+            //I use it to remove blank xml tags
+            //https://stackoverflow.com/a/1144788
+            function replaceAll(str, find, replace) {
+                return str.replace(new RegExp(find, 'g'), replace);
+            }
             console.log(xmlText)
+
             if (xmlText) {
                 //clear the old space out
                 Blockly.mainWorkspace.clear();

@@ -73,13 +73,97 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
       "type": "input_value",
       "name": "VALUE1",
       "check": "Colour"
-    },{
+    }, {
       "type": "input_value",
       "name": "VALUE2",
       "check": "Colour"
     }],
     "colour": 200,
     "output": "Boolean"
+  }, {
+    "type": "distanceTo:",
+    "message0": 'distrance to %1',
+    "args0": [{
+      "type": "field_dropdown",
+      "name": "VALUE1",
+      "options": [
+        ["mouse-pointer", "_mouse_"],
+        ["other sprite here", "ITEM2"]
+      ]
+    }],
+    "colour": 200,
+    "output": null
+  },
+  {
+    "type": "doAsk",
+    "message0": "ask %1 and wait",
+    "colour":200,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1"
+    }]
+  },
+  {
+    "type": "answer",
+    "message0": "answer",
+    "colour":200,
+    "output": null
+  },
+  {
+    "type": "keyPressed:",
+    "message0": 'key %1 pressed?',
+    "args0": [{
+      "type": "field_dropdown",
+      "name": "VALUE1",
+      "options": [
+        ["space", "ITEM1"],
+        ["up arrow", "ITEM2"],
+        ["down arrow", "ITEM3"],
+        ["left arrow", "ITEM4"],
+        ["right arrow", "ITEM5"],
+        ["any", "ITEM6"],
+        ["a", "ITEM7"],
+        ["b", "ITEM8"],
+        ["c", "ITEM9"],
+        ["d", "ITEM10"],
+        ["e", "ITEM11"],
+        ["f", "ITEM12"],
+        ["g", "ITEM13"],
+        ["h", "ITEM14"],
+        ["i", "ITEM15"],
+        ["j", "ITEM16"],
+        ["k", "ITEM17"],
+        ["l", "ITEM18"],
+        ["m", "ITEM19"],
+        ["n", "ITEM20"],
+        ["o", "ITEM21"],
+        ["p", "ITEM22"],
+        ["q", "ITEM23"],
+        ["r", "ITEM24"],
+        ["s", "ITEM25"],
+        ["t", "ITEM26"],
+        ["u", "ITEM27"],
+        ["v", "ITEM28"],
+        ["w", "ITEM29"],
+        ["x", "ITEM30"],
+        ["y", "ITEM31"],
+        ["z", "ITEM32"],
+        ["0", "ITEM33"],
+        ["1", "ITEM34"],
+        ["2", "ITEM35"],
+        ["3", "ITEM36"],
+        ["4", "ITEM37"],
+        ["5", "ITEM38"],
+        ["6", "ITEM39"],
+        ["7", "ITEM40"],
+        ["8", "ITEM41"],
+        ["9", "ITEM42"]
+      ]
+    }],
+    "colour": 200,
+    "output": "Boolean"
   }
-  
+
 ]); // END JSON EXTRACT (Do not delete this comment.)

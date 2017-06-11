@@ -125,12 +125,22 @@ var Argon = {
                                 //we need to create the input block
                                 var type = 'input';
                                 var text = blockArray[i].toString();
-                                
+
                                 //we need to treat color inputs differently
-                                var colorInputBlocks = ['touchingColor:','color:sees:'];
+                                var colorInputBlocks = ['touchingColor:', 'color:sees:'];
+                                console.log(blockArray[i] + "color! ")
                                 if (colorInputBlocks.indexOf(blockArray[0]) > -1) {
                                     type = 'colour_input';
-                                    text = blockArray[i].toString(16); //convert to hexadecimal
+                                    text = toColor(blockArray[i]); //convert to argb
+                                }
+                                //https://stackoverflow.com/a/11866980
+                                function toColor(num) {
+                                    num >>>= 0;
+                                    var b = num & 0xFF,
+                                        g = (num & 0xFF00) >>> 8,
+                                        r = (num & 0xFF0000) >>> 16,
+                                        a = ((num & 0xFF000000) >>> 24) / 255;
+                                    return "rgba(" + [r, g, b, a].join(",") + ")";
                                 }
                                 scriptObj.block.value.push({
                                     _name: "VALUE" + i.toString(),

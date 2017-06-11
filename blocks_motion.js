@@ -214,18 +214,18 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "xpos",
     "message0": "x position",
     "colour":225,
-    "output": "Number"
+    "output": null
   },
   {
     "type": "ypos",
     "message0": "y position",
     "colour":225,
-    "output": "Number"
+    "output": null
   },
   {
     "type": "heading",
     "message0": "direction",
     "colour":225,
-    "output": "Number"
+    "output": null
   }
 ]); // END JSON EXTRACT (Do not delete this comment.)

@@ -1,24 +1,11 @@
 <xml xmlns='http://www.w3.org/1999/xhtml'>
-  <block type='whenGreenFlag' id='CtnsO2s9Nj3uTZ8VdocV' x='33' y='66'>
-    <value/>
-    <next>
-      <block type='putPenDown' id='SjP7cHcQ0a1JEvqFNCrY'>
-        <value/>
-        <next>
-          <block type='putPenUp' id='HBXWqS6TDuarWHzlYFR1'>
-            <value/>
-            <next>
-              <block type='doRepeat' id='gucXG9dJSl9l7kLB9sew'>
-                <value name='VALUE1'>
-                  <block type='input' id='TBTYUu3R6QUHjNsjZTDl'>
-                    <field name='FIELDNAME'>10</field>
-                  </block>
-                </value>
-              </block>
-            </next>
-          </block>
-        </next>
+  <block type='touchingColor:' id='C1AubFuqrJdwSpVvVOY2' x='56' y='39'>
+    <value name='VALUE1'>
+      <block type='input' id='3fLNbmSQtGWOzgcZjgBi'>
+        <field name='FIELDNAME'>16520114</field>
       </block>
-    </next>
+    </value>
+    <field name='VALUE1'>16520114</field>
   </block>
 </xml>
+

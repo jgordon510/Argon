@@ -34,7 +34,7 @@ var Argon = {
             data.scripts.forEach(function(script) {
                 //a blockArray to hold the new script blocks
                 var blockArray = script[2].shift()
-                
+
                 //the top block of the script
                 var newBlock = {
                     _type: blockArray[0], //the block name
@@ -50,7 +50,7 @@ var Argon = {
                 addInputs({
                     block: newBlock //could add the last block of scriptObj instead here
                 }, blockArray);
-                
+
 
                 addNextBlock(scriptObj.block[scriptObj.block.length - 1]);
 
@@ -81,7 +81,7 @@ var Argon = {
                 function addInputs(scriptObj, blockArray) {
                     //go through the blockArray starting with the 1st input
                     //which is at index 1
-                    
+
                     for (var i = 1; i < blockArray.length; i++) {
                         //ignore null values
                         if (blockArray[i] != null) {
@@ -91,8 +91,8 @@ var Argon = {
                                 //check to make sure the block is formatted as an array
                                 //in the case of control inputs (etc.), they must be formatted
                                 //statements come in an array already
-                                if(typeof blockArray[i][0]==="string")
-                                {
+                                console.log("here")
+                                if (typeof blockArray[i][0] === "string") {
                                     blockArray[i] = [blockArray[i]];
                                 }
                                 //for some reason they come reversed
@@ -115,21 +115,30 @@ var Argon = {
                                     addInputs(scriptObj.block.statement[position - 1], block);
                                 }); //end of statement forEach
                             }
-                            else { 
+                            else {
                                 //just a regular input
                                 //we treat every input as if it's a regular input block
                                 //and a dropdown.  The duplication doesn't hurt, and
                                 //there isn't an easy way to tell the difference, without
                                 //making a reference list
-                                
+
                                 //we need to create the input block
+                                var type = 'input';
+                                var text = blockArray[i].toString();
+                                
+                                //we need to treat color inputs differently
+                                var colorInputBlocks = ['touchingColor:','color:sees:'];
+                                if (colorInputBlocks.indexOf(blockArray[0]) > -1) {
+                                    type = 'colour_input';
+                                    text = blockArray[i].toString(16); //convert to hexadecimal
+                                }
                                 scriptObj.block.value.push({
                                     _name: "VALUE" + i.toString(),
                                     block: {
-                                        _type: "input",
+                                        _type: type,
                                         _id: makeid(),
                                         field: [{
-                                            __text: blockArray[i].toString(),
+                                            __text: text,
                                             _name: "FIELDNAME"
                                         }]
                                     }

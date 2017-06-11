@@ -38,23 +38,48 @@ Blockly.Blocks.colour.HUE = Blockly.Constants.Colour.HUE;
 
 
 
-   
-    // <block type="comeToFront"></block>0
-    // <block type="goBackByLayers:"></block>1
+
+// <block type="comeToFront"></block>0
+// <block type="goBackByLayers:"></block>1
 Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
- {
+  {
     "type": "touching:",
     "message0": 'touching %1',
     "args0": [{
       "type": "field_dropdown",
       "name": "VALUE1",
       "options": [
-        [ "mouse-pointer", "_mouse_" ],
-        [ "edge", "_edge_"],
-        [ "other sprite here", "ITEM3" ]
+        ["mouse-pointer", "_mouse_"],
+        ["edge", "_edge_"],
+        ["other sprite here", "ITEM3"]
       ]
     }],
     "colour": 200,
     "output": "Boolean"
+  }, {
+    "type": "touchingColor:",
+    "message0": "touching color %1 ?",
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "Colour"
+    }],
+    "colour": 200,
+    "output": "Boolean"
+  }, {
+    "type": "color:sees:",
+    "message0": "color %1 is touching color %2 ?",
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "Colour"
+    },{
+      "type": "input_value",
+      "name": "VALUE2",
+      "check": "Colour"
+    }],
+    "colour": 200,
+    "output": "Boolean"
   }
+  
 ]); // END JSON EXTRACT (Do not delete this comment.)

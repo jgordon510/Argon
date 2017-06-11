@@ -51,6 +51,16 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "colour": 32,
     "output": "Value"
   }, {
+    "type": "colour_input",
+    "message0": "%1",
+    "args0": [{
+      "type": "field_colour",
+      "name": "FIELDNAME",
+      "colour": "#ff0000"
+    }],
+    "colour": 32,
+    "output": "Colour"
+  }, {
     "type": "variable",
     "message0": "variable: %1",
     "args0": [{
@@ -60,7 +70,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     }],
     "colour": 32,
     "output": "Value"
-  },{
+  }, {
     "type": "list",
     "message0": "list: %1",
     "args0": [{

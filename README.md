@@ -7,7 +7,7 @@ Argon is actively developed, as of the Summer of 2017 by Jeffrey Gordon.  Curren
 [Development Video](https://www.youtube.com/watch?v=grpiT5QoRTk)
 
 Script example: 
-![alt text](script_example.png "")
+![alt text](script_example.jpg "")
 
 # Code #
 The source code for phosphorus and sulfurous are available on GitHub.

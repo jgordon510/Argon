@@ -1,11 +1,26 @@
 <xml xmlns='http://www.w3.org/1999/xhtml'>
-  <block type='touchingColor:' id='C1AubFuqrJdwSpVvVOY2' x='56' y='39'>
+  <block type='color:sees:' id='R1vbgpQA3RNJyXmNzlBW' x='69.7' y='44.15'>
     <value name='VALUE1'>
-      <block type='input' id='3fLNbmSQtGWOzgcZjgBi'>
-        <field name='FIELDNAME'>16520114</field>
+      <block type='colour_input' id='aOwXEeWUwT0Kgrwce98N'>
+        <field name='FIELDNAME'>#3109</field>
       </block>
     </value>
-    <field name='VALUE1'>16520114</field>
+    <value name='VALUE2'>
+      <block type='colour_input' id='RqJO9ypaxuf8tdyWEikK'>
+        <field name='FIELDNAME'>#ffffff</field>
+      </block>
+    </value>
+    <field name='VALUE1'>-12553</field>
+    <field name='VALUE2'>-16777215</field>
   </block>
 </xml>
 
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="touchingColor:" id="qa)OlyQ_;O(wYA(o+p#o" x="176" y="101">
+    <value name="VALUE1">
+      <block type="colour_input" id="I}PB%6zIYFKK46rw*VX/">
+        <field name="FIELDNAME">#ff0000</field>
+      </block>
+    </value>
+  </block>
+</xml>

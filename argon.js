@@ -22,6 +22,7 @@ var Argon = {
         });
     },
     renderBlocks: function(data) {
+        var scale = 1.3;  //this scale approximates the size ratio - scratch:blockly
         console.log("rendering blocks from file");
         //for now, we'll render just sprite1
         if (data.objName === "Sprite1") {
@@ -40,8 +41,8 @@ var Argon = {
                     _type: blockArray[0], //the block name
                     _id: makeid(), //20 char random id
                     value: [], //a place to store the input value (repeat loop or something)
-                    _x: script[0], //the xLoc
-                    _y: script[1], //the yLoc
+                    _x: script[0]*scale, //the scaled xLoc
+                    _y: script[1]*scale, //the scaled yLoc
                     statement: []
                 };
                 //add the new block to the scriptObj block array

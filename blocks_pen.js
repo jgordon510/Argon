@@ -148,12 +148,3 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
   }
 ]); // END JSON EXTRACT (Do not delete this comment.)
 
-    // 
-    // 
-    // <block type="putPenDown"></block>
-    // <block type="putPenUp"></block>
-
-    // :
-    // :
-    // :
-    // :

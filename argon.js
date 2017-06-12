@@ -3,7 +3,7 @@ var Argon = {
         console.log("injecting data into div")
             //these S&V values can be changed to effect the overall look
         Blockly.HSV_SATURATION = 0.9;
-        Blockly.HSV_VALUE = 0.8;
+        Blockly.HSV_VALUE = 0.7;
         //scratch-style event blocks
         Blockly.BlockSvg.START_HAT = true;
         // player-area should take the whole screen vertically
@@ -127,7 +127,7 @@ var Argon = {
                                 var text = blockArray[i].toString();
 
                                 //we need to treat color inputs differently
-                                var colorInputBlocks = ['touchingColor:', 'color:sees:'];
+                                var colorInputBlocks = ['touchingColor:', 'color:sees:', 'penColor:'];
                                 console.log(blockArray[i] + "color! ")
                                 if (colorInputBlocks.indexOf(blockArray[0]) > -1) {
                                     type = 'colour_input';

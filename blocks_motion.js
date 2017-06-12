@@ -135,6 +135,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "colour":225,
     "nextStatement": null,
     "previousStatement": null,
+    "inputsInline": true,
     "args0": [{
       "type": "input_value",
       "name": "VALUE1"

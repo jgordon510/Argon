@@ -43,6 +43,20 @@ Blockly.Blocks.colour.HUE = Blockly.Constants.Colour.HUE;
     // <block type="goBackByLayers:"></block>1
 Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
   {
+    "type": "clearPenTrails",
+    "message0": "clear",
+    "colour":160,
+    "nextStatement": null,
+    "previousStatement": null
+  },
+  {
+    "type": "stampCostume",
+    "message0": "stamp",
+    "colour":160,
+    "nextStatement": null,
+    "previousStatement": null
+  },
+  {
     "type": "putPenDown",
     "message0": "pen down",
     "colour":160,
@@ -54,5 +68,92 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "colour":160,
     "nextStatement": null,
     "previousStatement": null
+  },{
+    "type": "penColor:",
+    "message0": "set pen color to %1",
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "Colour"
+    }],
+    "colour": 160,
+    "nextStatement": null,
+    "previousStatement": null
+  },{
+    "type": "changePenHueBy:",
+    "message0": "change pen color by %1",
+    "colour":160,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": null
+    }]
+  },{
+    "type": "setPenHueTo:",
+    "message0": "set pen color to %1",
+    "colour":160,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": null
+    }]
+  },{
+    "type": "changePenShadeBy:",
+    "message0": "change pen shade by %1",
+    "colour":160,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": null
+    }]
+  },{
+    "type": "setPenShadeTo:",
+    "message0": "set pen shade to %1",
+    "colour":160,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": null
+    }]
+  },{
+    "type": "changePenSizeBy:",
+    "message0": "change pen size by %1",
+    "colour":160,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": null
+    }]
+  },{
+    "type": "penSize:",
+    "message0": "set pen size to %1",
+    "colour":160,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": null
+    }]
   }
 ]); // END JSON EXTRACT (Do not delete this comment.)
+
+    // 
+    // 
+    // <block type="putPenDown"></block>
+    // <block type="putPenUp"></block>
+
+    // :
+    // :
+    // :
+    // :

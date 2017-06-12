@@ -41,7 +41,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "+",
     "message0": "%1 + %2",
     "colour": 93,
-    "output": null,
+    "output": "value",
     "inputsInline": true,
     "args0": [{
       "type": "input_value",
@@ -54,7 +54,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "-",
     "message0": "%1 - %2",
     "colour": 93,
-    "output": null,
+    "output": "value",
     "inputsInline": true,
     "args0": [{
       "type": "input_value",
@@ -67,7 +67,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "*",
     "message0": "%1 * %2",
     "colour": 93,
-    "output": null,
+    "output": "value",
     "inputsInline": true,
     "args0": [{
       "type": "input_value",
@@ -80,7 +80,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "/",
     "message0": "%1 / %2",
     "colour": 93,
-    "output": null,
+    "output": "value",
     "inputsInline": true,
     "args0": [{
       "type": "input_value",
@@ -93,7 +93,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "randomFrom:to:",
     "message0": "pick random from %1 to %2",
     "colour": 93,
-    "output": null,
+    "output": "value",
     "inputsInline": true,
     "args0": [{
       "type": "input_value",
@@ -181,7 +181,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "concatenate:with:",
     "message0": "join %1 %2",
     "colour": 93,
-    "output": null,
+    "output": "value",
     "inputsInline": true,
     "args0": [{
       "type": "input_value",
@@ -194,7 +194,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "letter:of:",
     "message0": "letter %1 of %2",
     "colour": 93,
-    "output": null,
+    "output": "value",
     "inputsInline": true,
     "args0": [{
       "type": "input_value",
@@ -207,7 +207,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "%",
     "message0": "%1 mod %2",
     "colour": 93,
-    "output": null,
+    "output": "value",
     "inputsInline": true,
     "args0": [{
       "type": "input_value",
@@ -220,7 +220,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "stringLength:",
     "message0": "length of %1",
     "colour": 93,
-    "output": null,
+    "output": "value",
     "inputsInline": true,
     "args0": [{
       "type": "input_value",
@@ -230,7 +230,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "rounded",
     "message0": "round %1",
     "colour": 93,
-    "output": null,
+    "output": "value",
     "inputsInline": true,
     "args0": [{
       "type": "input_value",
@@ -263,7 +263,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
       "name": "VALUE2"
     }],
     "colour": 93,
-    "output": null
+    "output": "value"
   }
 
 ]); // END JSON EXTRACT (Do not delete this comment.)

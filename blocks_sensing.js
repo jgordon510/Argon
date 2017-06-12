@@ -92,7 +92,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
       ]
     }],
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "doAsk",
     "message0": "ask %1 and wait",
@@ -107,7 +107,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "answer",
     "message0": "answer",
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "keyPressed:",
     "message0": 'key %1 pressed?',
@@ -170,17 +170,17 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "mouseX",
     "message0": "mouse x",
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "mouseY",
     "message0": "mouse y",
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "soundLevel",
     "message0": "loudness",
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "senseVideoMotion",
     "message0": 'video %1 on %2',
@@ -200,7 +200,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
       ]
     }],
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "setVideoState",
     "message0": 'turn video %1',
@@ -214,7 +214,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
       ]
     }],
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "setVideoTransparency",
     "message0": "set video transparency to %1%",
@@ -229,7 +229,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "type": "timer",
     "message0": "timer",
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "timerReset",
     "message0": "reset timer",
@@ -260,7 +260,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
       ]
     }],
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "timeAndDate",
     "message0": 'current %1',
@@ -278,17 +278,17 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
       ]
     }],
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "timestamp",
     "message0": "days since 2000",
     "colour": 200,
-    "output": null
+    "output": "value"
   }, {
     "type": "getUserName",
     "message0": "username",
     "colour": 200,
-    "output": null
+    "output": "value"
   },
 
 ]); // END JSON EXTRACT (Do not delete this comment.)

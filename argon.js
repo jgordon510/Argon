@@ -10,6 +10,7 @@ var Argon = {
         document.getElementById('player-area').setAttribute("style", 'height: ' + (window.innerHeight).toString() + 'px; width:' + 99 + '%');
         // blockly div should fill the space below the player
         document.getElementById('blocklyDiv').setAttribute("style", 'height: ' + (window.innerHeight - 440).toString() + 'px; width:' + 99 + '%');
+
         window.workspace = Blockly.inject('blocklyDiv', {
             toolbox: document.getElementById('toolbox'),
             zoom: { //this allows zooming the workspace
@@ -20,9 +21,11 @@ var Argon = {
                 scaleSpeed: 1.1
             }
         });
+        var variableList = Blockly.Variables.allVariables(window.workspace)
+        variableList.push(Blockly.Msg.NEW_VARIABLE);
     },
     renderBlocks: function(data) {
-        var scale = 1.3;  //this scale approximates the size ratio - scratch:blockly
+        var scale = 1.3; //this scale approximates the size ratio - scratch:blockly
         console.log("rendering blocks from file");
         //for now, we'll render just sprite1
         if (data.objName === "Sprite1") {
@@ -41,8 +44,8 @@ var Argon = {
                     _type: blockArray[0], //the block name
                     _id: makeid(), //20 char random id
                     value: [], //a place to store the input value (repeat loop or something)
-                    _x: script[0]*scale, //the scaled xLoc
-                    _y: script[1]*scale, //the scaled yLoc
+                    _x: script[0] * scale, //the scaled xLoc
+                    _y: script[1] * scale, //the scaled yLoc
                     statement: []
                 };
                 //add the new block to the scriptObj block array
@@ -88,33 +91,51 @@ var Argon = {
                         if (blockArray[i] != null) {
                             //here we've found an array of new blocks nested in our existing block
                             //we'll need to add each of them, possibly calling this function again recusively
+                            console.log(blockArray[i])
                             if (typeof blockArray[i] === 'object') { //an array actually
                                 //check to make sure the block is formatted as an array
-                                //in the case of control inputs (etc.), they must be formatted
-                                //statements come in an array already
-                                console.log("here")
-                                if (typeof blockArray[i][0] === "string") {
-                                    blockArray[i] = [blockArray[i]];
-                                }
-                                //for some reason they come reversed
-                                //remember this when you're working on saving
-                                blockArray[i].reverse();
-                                //go through the blocks adding each to the statement
-                                blockArray[i].forEach(function(block) {
-                                    var position = scriptObj.block.statement.push({
+                                if (blockArray[i][0] === "readVariable" || blockArray[i][0] === "contentsOfList:") {
+                                    //we're dealing with a variable
+                                    scriptObj.block.value.push( {
                                         _name: "VALUE" + i.toString(),
                                         block: {
-                                            _type: block[0],
+                                            _type: blockArray[i][0],
                                             _id: makeid(),
-                                            value: [],
-                                            statement: [],
-                                            next: []
+                                            field: {
+                                                __text: blockArray[i][1],
+                                                _name: "FIELDNAME"
+                                            }
                                         }
                                     });
-                                    //add any inputs here
-                                    //position is one more than the index of the statement 
-                                    addInputs(scriptObj.block.statement[position - 1], block);
-                                }); //end of statement forEach
+                                    
+                                }
+                                else { //we have a nested statement
+                                    //in the case of control inputs (etc.), they must be formatted
+                                    //statements come in an array already
+                                    if (typeof blockArray[i][0] === "string") {
+                                        blockArray[i] = [blockArray[i]];
+                                    }
+                                    //for some reason they come reversed
+                                    //remember this when you're working on saving
+                                    blockArray[i].reverse();
+                                    //go through the blocks adding each to the statement
+                                    blockArray[i].forEach(function(block) {
+                                        var position = scriptObj.block.statement.push({
+                                            _name: "VALUE" + i.toString(),
+                                            block: {
+                                                _type: block[0],
+                                                _id: makeid(),
+                                                value: [],
+                                                statement: [],
+                                                next: []
+                                            }
+                                        });
+                                        //add any inputs here
+                                        //position is one more than the index of the statement 
+                                        addInputs(scriptObj.block.statement[position - 1], block);
+                                    }); //end of statement forEach 
+                                }
+
                             }
                             else {
                                 //just a regular input
@@ -126,10 +147,8 @@ var Argon = {
                                 //we need to create the input block
                                 var type = 'input';
                                 var text = blockArray[i].toString();
-
                                 //we need to treat color inputs differently
                                 var colorInputBlocks = ['touchingColor:', 'color:sees:', 'penColor:'];
-                                console.log(blockArray[i] + "color! ")
                                 if (colorInputBlocks.indexOf(blockArray[0]) > -1) {
                                     type = 'colour_input';
                                     text = toColor(blockArray[i]); //convert to argb
@@ -154,6 +173,8 @@ var Argon = {
                                         }]
                                     }
                                 });
+
+
                                 //we'll also set the drop down field
                                 if (typeof scriptObj.block.field === 'undefined') scriptObj.block.field = [];
                                 scriptObj.block.field.push({

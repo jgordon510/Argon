@@ -83,6 +83,16 @@ var Argon = {
                 }
 
                 function addInputs(scriptObj, blockArray) {
+                    console.log(blockArray[0])
+                    if (blockArray[0] === 'setVar:to:') {
+                        // console.log("EXCEPTION")
+                        // var newArray = [blockArray[0]];
+                        // for (var i = 1; i < blockArray.length; i++) {
+
+                        //     newArray.push(blockArray[i]);
+                        // }
+                        // blockArray = newArray;
+                    }
                     //go through the blockArray starting with the 1st input
                     //which is at index 1
 
@@ -96,7 +106,7 @@ var Argon = {
                                 //check to make sure the block is formatted as an array
                                 if (blockArray[i][0] === "readVariable" || blockArray[i][0] === "contentsOfList:") {
                                     //we're dealing with a variable
-                                    scriptObj.block.value.push( {
+                                    scriptObj.block.value.push({
                                         _name: "VALUE" + i.toString(),
                                         block: {
                                             _type: blockArray[i][0],
@@ -107,7 +117,7 @@ var Argon = {
                                             }
                                         }
                                     });
-                                    
+
                                 }
                                 else { //we have a nested statement
                                     //in the case of control inputs (etc.), they must be formatted
@@ -162,6 +172,11 @@ var Argon = {
                                         a = ((num & 0xFF000000) >>> 24) / 255;
                                     return "rgba(" + [r, g, b, a].join(",") + ")";
                                 }
+                                //Now we'll deal with variable inputs on data blocks
+                                if (blockArray[0] === 'setVar:to:' && i === 1) type = 'readVariable';
+                                if (blockArray[0] === 'changeVar:by:' && i === 1) type = 'readVariable';
+                                if (blockArray[0] === 'showVariable:') type = 'readVariable';
+                                if (blockArray[0] === 'hideVariable:') type = 'readVariable';
                                 scriptObj.block.value.push({
                                     _name: "VALUE" + i.toString(),
                                     block: {
@@ -179,7 +194,7 @@ var Argon = {
                                 if (typeof scriptObj.block.field === 'undefined') scriptObj.block.field = [];
                                 scriptObj.block.field.push({
                                     __text: blockArray[i].toString(),
-                                    _name: "VALUE" + i.toString()
+                                    _name: "FIELDNAME"
                                 });
                             }
 

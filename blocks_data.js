@@ -68,8 +68,62 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
       "name": "FIELDNAME"
     }],
     "colour": 32,
-    "output": "Value"
+    "output": "Variable"
   }, {
+    "type": "setVar:to:",
+    "message0": "set %1 to %2",
+    "inputsInline": true,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "Variable"
+    }, {
+      "type": "input_value",
+      "name": "VALUE2"
+    }],
+    "colour": 32
+  }, {
+    "type": "changeVar:by:",
+    "message0": "change %1 by %2",
+    "inputsInline": true,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "Variable"
+    }, {
+      "type": "input_value",
+      "name": "VALUE2"
+    }],
+    "colour": 32
+  }, {
+    "type": "showVariable:",
+    "message0": "show %1",
+    "inputsInline": true,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "Variable"
+    }],
+    "colour": 32
+  }, {
+    "type": "hideVariable:",
+    "message0": "hide %1",
+    "inputsInline": true,
+    "nextStatement": null,
+    "previousStatement": null,
+    "args0": [{
+      "type": "input_value",
+      "name": "VALUE1",
+      "check": "Variable"
+    }],
+    "colour": 32
+  },{
     "type": "contentsOfList:",
     "message0": "list: %1",
     "args0": [{
@@ -80,3 +134,7 @@ Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
     "output": "Value"
   }
 ]); // END JSON EXTRACT (Do not delete this comment.)
+// <block type=""></block>
+// <block type=""></block>
+// <block type=""></block>
+// <block type=""></block>

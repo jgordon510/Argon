@@ -323,6 +323,7 @@ var P = (function() {
 
   IO.loadScratchr2Project = function(id, callback, self) {
     var request = new CompositeRequest;
+
     IO.init(request);
 
     request.defer = true;
@@ -347,6 +348,7 @@ var P = (function() {
       }
       try {
         IO.loadProject(json);
+        Argon.loadedJSON = json;
         if (callback) request.onLoad(callback.bind(self));
         if (request.isDone) {
           request.load(new Stage().fromJSON(json));
@@ -472,7 +474,6 @@ var P = (function() {
     IO.loadArray(data.children, IO.loadObject);
     IO.loadBase(data);
     //render the first sprite
-    console.log(Argon.spriteData[0])
     Argon.makeSelector();
     Argon.renderBlocks(JSON.parse(JSON.stringify(Argon.spriteData[0])));
   };
@@ -660,7 +661,7 @@ var P = (function() {
   IO.loadBase = function(data) {
     //pass a copy of the data for argon to render the blocks
     Argon.spriteData.push(JSON.parse(JSON.stringify(data)));
-    
+
     data.scripts = data.scripts || [];
     data.costumes = IO.loadArray(data.costumes, IO.loadCostume);
     data.sounds = IO.loadArray(data.sounds, IO.loadSound);
@@ -819,10 +820,17 @@ var P = (function() {
       var f = isAudio ? IO.zip.file(id + '.wav') : IO.zip.file(id + '.gif') || IO.zip.file(id + '.png') || IO.zip.file(id + '.jpg') || IO.zip.file(id + '.svg');
       md5 = f.name;
     }
+
     var ext = md5.split('.').pop();
     if (ext === 'svg') {
+      var lastIndex = Argon.imgList.length;
+      Argon.imgList.push(null)
       var cb = function(source) {
         var div = document.createElement('div');
+        Argon.imgList[lastIndex] = {
+          type: ext,
+          data: source
+        };
         //div.innerHTML = source;
         //var svg = div.getElementsByTagName('svg')[0];
         //div.innerHTML = source.replace(/(<\/?)svg:/g, '$1');
@@ -901,8 +909,49 @@ var P = (function() {
     }
     else if (ext === 'wav') {
       var request = new Request;
+      var lastIndex = Argon.wavList.length;
+      Argon.wavList.push(null);
       var cb = function(ab) {
         IO.decodeAudio(ab, function(buffer) {
+          // start a new worker 
+          // we can't use Recorder directly, since it doesn't support what we're trying to do
+          var worker = new Worker('recorderWorker.js');
+
+          // initialize the new worker
+          worker.postMessage({
+            command: 'init',
+            config: {
+              sampleRate: 44100
+            }
+          });
+
+          // callback for `exportWAV`
+          worker.onmessage = function(e) {
+            var blob = e.data;
+            console.log(blob)
+            Argon.wavList[lastIndex] = {type:ext,data:blob};
+            // this is would be your WAV blob
+          };
+
+          // send the channel data from our buffer to the worker
+          worker.postMessage({
+            command: 'record',
+            buffer: [
+              buffer.getChannelData(0)
+            ]
+          });
+
+          // ask the worker for a WAV
+          worker.postMessage({
+            command: 'exportWAV',
+            type: 'audio/wav'
+          });
+
+          Argon.wavList[lastIndex] = {
+            type: ext,
+            data: buffer
+          };
+
           callback(buffer);
           request.load(buffer);
         });
@@ -929,9 +978,18 @@ var P = (function() {
         IO.projectRequest.add(request);
       }
       else {
+        var lastIndex = Argon.imgList.length;
+        Argon.imgList.push(null);
+
         IO.projectRequest.add(
           IO.loadImage(IO.ASSET_URL + md5 + '/get/', function(result) {
+            Argon.imgList[lastIndex] = {
+              type: ext,
+              data: result
+            };
+            console.log(callback)
             callback(result);
+
           }));
       }
     }
@@ -5724,4 +5782,3 @@ P.runtime = (function() {
   };
 
 }());
-

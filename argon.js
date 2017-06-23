@@ -1,21 +1,23 @@
 var Argon = {
     spriteData: [],
+    imgList: [],
+    wavList: [],
     makeSelector: function() {
         //add a dropdown menu for the sprite selection
         var HTML = '<select>';
         Argon.spriteData.forEach(function(sprite) {
-            HTML += '<option value="'+sprite.objName+'">'+sprite.objName+'</option>';
+            HTML += '<option value="' + sprite.objName + '">' + sprite.objName + '</option>';
         });
-        HTML +='</select>';
+        HTML += '</select>';
         var spriteSelector = document.getElementById("spriteSelection");
         spriteSelector.innerHTML = HTML;
         spriteSelector.onchange = function(e) {
             Argon.renderBlocks(JSON.parse(JSON.stringify(Argon.spriteData[e.target.selectedIndex])));
-        }
+        };
     },
     loadBlockly: function() {
-        console.log("injecting data into div")
-            //these S&V values can be changed to effect the overall look
+        console.log("injecting data into div");
+        //these S&V values can be changed to effect the overall look
         Blockly.HSV_SATURATION = 0.9;
         Blockly.HSV_VALUE = 0.7;
         //scratch-style event blocks
@@ -42,7 +44,6 @@ var Argon = {
         }
     },
     initData: function(data) {
-        console.log(JSON.stringify(data))
 
         window.eventsData = data.events;
 
@@ -59,13 +60,15 @@ var Argon = {
             window.listOptionsArray.push([list.listName, list.listName]);
         });
     },
+    scale: { //this scale approximates the size ratio - scratch:blockly
+        x: 2,
+        y: 1.3
+    },
     renderBlocks: function(data) {
         var scale = {
             x: 2,
             y: 1.3
-        }; //this scale approximates the size ratio - scratch:blockly
-        console.log("rendering blocks from file");
-        //for now, we'll render just sprite1
+        };
         //these variables/lists are for this sprite only
         if (typeof data.variables !== 'undefined') {
             data.variables.forEach(function(variable) {
@@ -82,22 +85,20 @@ var Argon = {
         var scriptObj = {
             block: []
         };
-        if(typeof data.scripts === 'undefined') data.scripts = [];
+        if (typeof data.scripts === 'undefined') data.scripts = [];
         data.scripts.forEach(function(originalScript) {
-            console.log(originalScript)
             //a blockArray to hold the new script blocks
             var script = originalScript.slice();
-            
+
             var blockArray = script[2].shift();
-            
-            console.log(blockArray)
+
             //the top block of the script
             var newBlock = {
                 _type: blockArray[0], //the block name
                 _id: makeid(), //20 char random id
                 value: [], //a place to store the input value (repeat loop or something)
-                _x: script[0] * scale.x, //the scaled xLoc
-                _y: script[1] * scale.y, //the scaled yLoc
+                _x: script[0] * Argon.scale.x, //the scaled xLoc
+                _y: script[1] * Argon.scale.y, //the scaled yLoc
                 statement: []
             };
             //add the new block to the scriptObj block array
@@ -115,7 +116,6 @@ var Argon = {
                 if (script[2].length > 0) {
                     //get the next block from the script
                     var blockArray = script[2].shift();
-                    console.log(originalScript)
                     //make a block object for the new block
                     var blockObj = {
                         _type: blockArray[0],
@@ -136,7 +136,6 @@ var Argon = {
             }
 
             function addInputs(scriptObj, blockArray) {
-                console.log(blockArray[0])
                 if (blockArray[0] === 'setVar:to:') {
                     // console.log("EXCEPTION")
                     // var newArray = [blockArray[0]];
@@ -154,7 +153,6 @@ var Argon = {
                     if (blockArray[i] != null) {
                         //here we've found an array of new blocks nested in our existing block
                         //we'll need to add each of them, possibly calling this function again recusively
-                        console.log(blockArray[i])
                         if (typeof blockArray[i] === 'object') { //an array actually
                             //check to make sure the block is formatted as an array
                             if (blockArray[i][0] === "readVariable" || blockArray[i][0] === "contentsOfList:") {
@@ -257,7 +255,6 @@ var Argon = {
 
 
                             //we'll also set the drop down field
-                            console.log(blockArray[0]);
                             if (typeof scriptObj.block.field === 'undefined') scriptObj.block.field = [];
                             var name = "VALUE" + i.toString();
                             //we need to treat variable, list, and event dropdowns a little differently
@@ -303,13 +300,12 @@ var Argon = {
         function replaceAll(str, find, replace) {
             return str.replace(new RegExp(find, 'g'), replace);
         }
-        console.log(xmlText)
 
         if (xmlText) {
             //clear the old space out
             Blockly.mainWorkspace.clear();
             //inject the blocks into the dom
-            if(data.scripts.length > 0) Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xmlText), Blockly.mainWorkspace);
+            if (data.scripts.length > 0) Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xmlText), Blockly.mainWorkspace);
         }
         //this makes a random 20-char id
         function makeid() {
@@ -334,7 +330,112 @@ window.saveWorkspace = function() {
     localStorage.setItem("blockly.xml", xmlText);
 };
 
+window.dumpXML = function() {
+    var xmlDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+    var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+    return xmlText;
+};
 
+window.dumpObj = function() {
+    var xmlText = window.dumpXML()
+    var x2js = new X2JS();
+    return x2js.xml_str2json(xmlText).xml.block;
+}
+
+window.makeScript = function() {
+    var blocklyObj = window.dumpObj();
+    console.log(blocklyObj)
+    var newScript = [];
+    newScript.push(Math.round(parseInt(blocklyObj._x) / Argon.scale.x))
+    newScript.push(Math.round(parseInt(blocklyObj._y) / Argon.scale.y))
+    newScript.push([[blocklyObj._type]])
+    if (typeof blocklyObj.next !== 'undefined') {
+        addBlock(blocklyObj.next.block)
+    }
+
+    //console.log(newScript)
+
+    //replace this with the current selection
+    Argon.spriteData[0].scripts[0] = newScript;
+    Argon.loadedJSON.children[0].scripts[0] = newScript;
+    console.log(Argon.loadedJSON.children[0].scripts[0])
+
+    var zip = new JSZip();
+    zip.file('project.json', JSON.stringify(Argon.loadedJSON));
+
+    zip.file("0.png", null, {
+        base64: true
+    });
+
+    Argon.imgList.forEach(function(image, index) {
+        console.log(index, image)
+        var position = (index + 1).toString();
+        if (image.type === 'svg') {
+            zip.file(position + '.svg', image.data);
+        }
+        else {
+            zip.file(position + '.' + image.type, getBase64Image(image.data), {
+                base64: true
+            });
+
+        }
+
+    });
+
+    Argon.wavList.forEach(function(wav, index) {
+        console.log(index, wav)
+        var buffer = wav.data;
+        zip.file(index.toString() + '.' + wav.type, wav.data, {
+            base64: true
+        });
+
+
+
+    });
+
+    function getBase64Image(img) {
+        // Create an empty canvas element
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Copy the image contents to the canvas
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        // Get the data-URL formatted image
+        // Firefox supports PNG and JPEG. You could check img.src to
+        // guess the original format, but be aware the using "image/jpg"
+        // will re-encode the image.
+        var dataURL = canvas.toDataURL("image/png");
+
+        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    }
+
+    zip.generateAsync({
+            type: "blob"
+        })
+        .then(function(content) {
+            // see FileSaver.js
+            saveAs(content, "argonEdit.sb2");
+        });
+
+    function addBlock(block) {
+        console.log("BLOCK:");
+        console.log(block);
+        newScript[2].push([block._type]);
+        if (typeof block.value !== 'undefined') {
+            console.log("VALUE:");
+            console.log(block.value.block.field.__text);
+            newScript[2][newScript[2].length - 1].push(parseInt(block.value.block.field.__text, 10));
+        }
+        if (typeof block.next !== 'undefined') {
+            addBlock(block.next.block);
+        }
+    }
+
+
+};
 window.loadWorkspace = function() {
     var xmlText = localStorage.getItem("blockly.xml");
     if (xmlText) {
@@ -350,9 +451,3 @@ window.loadWorkspace = function() {
         Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xmlDom);
     }
 };
-
-function test() {
-    var text = '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="forward:" id="FOCtyk8mE8txmXECod4D" x="26" y="35"><value name="VALUE"><block type="input" id="iPA%_v|JlL0}14~o!.s~"><field name="FIELDNAME">10</field></block></value></block></xml>'
-    var x2js = new X2JS();
-    console.log(x2js.xml_str2json(text));
-}

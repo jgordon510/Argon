@@ -101,7 +101,11 @@
 </section>
 <script src=fonts.js></script>
 <script src=https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.js></script>
-<script src="blockly_compressed.js"></script>
+<script src="/blockly_compressed.js"></script>
+  <!--<script src="../blockly/blockly_uncompressed.js"></script>-->
+  <!--<script src="blockly/blocks_compressed.js"></script>-->
+  <!--<script src="blockly/msg/js/en.js"></script>-->
+<!--<script src="blockly_predefinedVars.js"></script>-->
 <script src="blocks_motion.js"></script>
 <script src="blocks_data.js"></script>
 <script src="blocks_events.js"></script>
@@ -387,7 +391,7 @@
     <block type="changePenSizeBy:"></block>
     <block type="penSize:"></block>
   </category>
-  <category name="Data" colour="32">
+  <category name="Data" colour="32" >
     <block type="input"></block>
     <block type="colour_input"></block>
     <block type="readVariable"></block>
@@ -396,9 +400,26 @@
     <block type="showVariable:"></block>
     <block type="hideVariable:"></block>
     <block type="contentsOfList:"></block>
+    <block type="append:toList:"></block>
+    <block type="deleteLine:ofList:"></block>
+    <block type="insert:at:ofList:"></block>
+    <block type="setLine:ofList:to:"></block>
+    <block type="getLine:ofList:"></block>
+    <block type="lineCountOfList:"></block>
+    <block type="list:contains:"></block>
+    <block type="showList:"></block>
+    <block type="hideList:"></block>
   </category>
   <category name="Events" colour="20">
     <block type="whenGreenFlag"></block>
+    <block type="whenKeyPressed"></block>
+    <block type="whenSceneStarts"></block>
+    <block type="whenSensorGreaterThan"></block>
+    <!--<button text="new message.." callbackKey="createEventPressed"></button>-->
+    <block type="message"></block>
+    <block type="whenIReceive"></block>
+    <block type="broadcast:"></block>
+    <block type="doBroadcastAndWait"></block>
   </category>
   <category name="Control" colour="43">
     <block type="wait:elapsed:from:"></block>

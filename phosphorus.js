@@ -465,6 +465,7 @@ var P = (function() {
 
   IO.loadProject = function(data) {
     Argon.loadBlockly(); //make the blockly div
+    Argon.initData(JSON.parse(JSON.stringify(data)))
     IO.loadWavs();
     IO.loadArray(data.children, IO.loadObject);
     IO.loadBase(data);
@@ -652,6 +653,7 @@ var P = (function() {
 
   IO.loadBase = function(data) {
     //pass a copy of the data for argon to render the blocks
+    
     Argon.renderBlocks(JSON.parse(JSON.stringify(data)));
     data.scripts = data.scripts || [];
     data.costumes = IO.loadArray(data.costumes, IO.loadCostume);

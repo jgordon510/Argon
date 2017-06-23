@@ -21,13 +21,47 @@ var Argon = {
                 scaleSpeed: 1.1
             }
         });
-        var variableList = Blockly.Variables.allVariables(window.workspace)
-        variableList.push(Blockly.Msg.NEW_VARIABLE);
+        window.workspace.registerButtonCallback("createEventPressed", createEvent)
+
+        function createEvent() {
+            console.log("test")
+        }
+    },
+    initData: function(data) {
+        console.log(JSON.stringify(data))
+        window.eventsData = data.events;
+
+        window.variableOptionsArray = [];
+
+        if (typeof data.variables === 'undefined') data.variables = [];
+        data.variables.forEach(function(variable) {
+            window.variableOptionsArray.push([variable.name, variable.name]);
+        });
+
+        window.listOptionsArray = [];
+        if (typeof data.lists === 'undefined') data.lists = [];
+        data.lists.forEach(function(list) {
+            window.listOptionsArray.push([list.listName, list.listName]);
+        });
     },
     renderBlocks: function(data) {
-        var scale = 1.3; //this scale approximates the size ratio - scratch:blockly
+        var scale = {
+            x: 2,
+            y: 1.3
+        }; //this scale approximates the size ratio - scratch:blockly
         console.log("rendering blocks from file");
         //for now, we'll render just sprite1
+        //these variables/lists are for this sprite only
+        if (typeof data.variables !== 'undefined') {
+            data.variables.forEach(function(variable) {
+                window.variableOptionsArray.push([data.objName + ": " + variable.name, variable.name]);
+            });
+        }
+        if (typeof data.lists !== 'undefined') {
+            data.lists.forEach(function(list) {
+                window.listOptionsArray.push([data.objName + ": " + list.listName, list.listName]);
+            });
+        }
         if (data.objName === "Sprite1") {
             //the scriptObj holds the scripts once they've
             //been organized to match the xml structure of blockly
@@ -37,15 +71,15 @@ var Argon = {
 
             data.scripts.forEach(function(script) {
                 //a blockArray to hold the new script blocks
-                var blockArray = script[2].shift()
+                var blockArray = script[2].shift();
 
                 //the top block of the script
                 var newBlock = {
                     _type: blockArray[0], //the block name
                     _id: makeid(), //20 char random id
                     value: [], //a place to store the input value (repeat loop or something)
-                    _x: script[0] * scale, //the scaled xLoc
-                    _y: script[1] * scale, //the scaled yLoc
+                    _x: script[0] * scale.x, //the scaled xLoc
+                    _y: script[1] * scale.y, //the scaled yLoc
                     statement: []
                 };
                 //add the new block to the scriptObj block array
@@ -146,7 +180,7 @@ var Argon = {
                                     }); //end of statement forEach 
                                 }
 
-                            }
+                            } //object check
                             else {
                                 //just a regular input
                                 //we treat every input as if it's a regular input block
@@ -173,10 +207,23 @@ var Argon = {
                                     return "rgba(" + [r, g, b, a].join(",") + ")";
                                 }
                                 //Now we'll deal with variable inputs on data blocks
+                                //we'll specify the data type and field position
                                 if (blockArray[0] === 'setVar:to:' && i === 1) type = 'readVariable';
                                 if (blockArray[0] === 'changeVar:by:' && i === 1) type = 'readVariable';
                                 if (blockArray[0] === 'showVariable:') type = 'readVariable';
                                 if (blockArray[0] === 'hideVariable:') type = 'readVariable';
+                                if (blockArray[0] === 'append:toList:' && i === 2) type = 'contentsOfList:';
+                                if (blockArray[0] === 'deleteLine:ofList:' && i === 2) type = 'contentsOfList:';
+                                if (blockArray[0] === 'insert:at:ofList:' && i === 3) type = 'contentsOfList:';
+                                if (blockArray[0] === 'setLine:ofList:to:' && i === 2) type = 'contentsOfList:';
+                                if (blockArray[0] === 'getLine:ofList:' && i === 2) type = 'contentsOfList:';
+                                if (blockArray[0] === 'lineCountOfList:') type = 'contentsOfList:';
+                                if (blockArray[0] === 'list:contains:' && i === 1) type = 'contentsOfList:';
+                                if (blockArray[0] === 'showList:') type = 'contentsOfList:';
+                                if (blockArray[0] === 'hideList:') type = 'contentsOfList:';
+                                if (blockArray[0] === 'whenIReceive') type = 'message';
+                                if (blockArray[0] === 'doBroadcastAndWait') type = 'message';
+                                if (blockArray[0] === 'broadcast:') type = 'message';
                                 scriptObj.block.value.push({
                                     _name: "VALUE" + i.toString(),
                                     block: {
@@ -191,14 +238,25 @@ var Argon = {
 
 
                                 //we'll also set the drop down field
+                                console.log(blockArray[0]);
                                 if (typeof scriptObj.block.field === 'undefined') scriptObj.block.field = [];
+                                var name = "VALUE" + i.toString();
+                                //we need to treat variable, list, and event dropdowns a little differently
+                                var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:'];
+                                //the dropdown is always in the first position; we just need to set the name prop 
+                                if (i === 1 && dropdownList.indexOf(blockArray[0]) > -1) name = "FIELDNAME";
                                 scriptObj.block.field.push({
                                     __text: blockArray[i].toString(),
-                                    _name: "FIELDNAME"
+                                    _name: name
                                 });
-                            }
+                                if (typeof window.eventOptionsArray === 'undefined') window.eventOptionsArray = [];
+                                if (blockArray[0] === 'whenIReceive' && window.eventOptionsArray.indexOf(blockArray[0]) === -1) {
+                                    window.eventOptionsArray.push([blockArray[1], blockArray[1]]);
+                                }
 
-                        }
+                            } //not object
+
+                        } //null check
                     }
                 }
             });

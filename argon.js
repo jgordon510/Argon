@@ -346,10 +346,9 @@ window.dumpObj = function() {
 
 window.makeScript = function() {
     var blocklyObjs = window.dumpObj();
-    
     if (typeof blocklyObjs === 'undefined') blocklyObjs = [];
     //account for single scripts
-    if(typeof blocklyObjs[1] === 'undefined') blocklyObjs = [blocklyObjs];
+    if (typeof blocklyObjs[1] === 'undefined') blocklyObjs = [blocklyObjs];
     blocklyObjs.forEach(function(blocklyObj, index) {
         var newScript = [];
         console.log(blocklyObj);
@@ -358,38 +357,51 @@ window.makeScript = function() {
         newScript.push([
             [blocklyObj._type]
         ]);
-        addBlock(blocklyObj, true);
+        
+        //add the block, null means that we'll start with
+        //the default: newScript[2]
+        addBlock(blocklyObj, null);
 
-        function addBlock(block, initial) {
-            console.log("BLOCK:");
-            console.log(block);
-            if (!initial) newScript[2].push([block._type]);
+        //this function adds a block to the target block
+        function addBlock(block, target) {
+            //add the block to the target
+            //we've already added the top block
+            if (target !== null) {
+                target.push([block._type]);
+            } else
+            {
+                //set the default target
+                target = newScript[2];
+            };
             if (typeof block.value !== 'undefined') {
-                console.log("VALUE:");
                 //we need to see if it's an array of values or just a single one
                 //the single object can't be iterated
                 if (typeof block.value[1] !== 'undefined') {
                     block.value.forEach(function(value) {
-                        newScript[2][newScript[2].length - 1].push(value.block.field.__text);
+                        target[target.length - 1].push(value.block.field.__text);
                     });
                 }
                 else {
-                    newScript[2][newScript[2].length - 1].push(block.value.block.field.__text);
+                    target[target.length - 1].push(block.value.block.field.__text);
                 }
 
             }
             if (typeof block.field !== 'undefined') {
-                console.log("FIELD:");
-                console.log(block.field);
-                newScript[2][newScript[2].length - 1].push(block.field.__text);
+                target[target.length - 1].push(block.field.__text);
+            }
+            if (typeof block.statement !== 'undefined') {
+                //make a new target array
+                target[target.length - 1].push([])
+                //here we need to push a new target array
+                addBlock(block.statement.block, target[target.length - 1][target[target.length - 1].length-1]);
             }
             if (typeof block.next !== 'undefined') {
-                addBlock(block.next.block);
+                //we have a next block, add it to the original target
+                addBlock(block.next.block, target);
             }
         }
         //console.log(newScript)
 
-        //replace this with the current selection
         console.log(Argon.spriteData[index])
         if (typeof Argon.spriteData[0].scripts !== 'undefined') {
             console.log(newScript)
@@ -398,30 +410,38 @@ window.makeScript = function() {
             //console.log(Argon.loadedJSON.children[0].scripts[index])
         }
 
-    })
-
-
-
-    var id = 1;
+    });
+    //the img and wav ids aren't correct as loaded by the sb2 for some reason
+    //they're (all?) -1 incoming
+    //the proper numbering is sequentially starting with the sprites
+    //then finishing with the stage
+    var id = 1; //1-index
     Argon.loadedJSON.children.forEach(function(sprite) {
-        // console.log(sprite)
+        //all the costumes
         sprite.costumes.forEach(function(costume) {
             costume.baseLayerID = id;
             id++;
         });
     });
+    //apply to the stage itself also
     Argon.loadedJSON.costumes.forEach(function(costume) {
         costume.baseLayerID = id;
         id++;
     });
+    //now do the sounds the same way
     id = 0;
     Argon.loadedJSON.children.forEach(function(sprite) {
-        // console.log(sprite)
         sprite.sounds.forEach(function(sound) {
             sound.soundID = id;
             id++;
         });
     });
+    //apply to the stage itself also
+    Argon.loadedJSON.sounds.forEach(function(sound) {
+        sound.soundID = id;
+        id++;
+    });
+    //save it
     var zip = new JSZip();
     zip.file('project.json', JSON.stringify(Argon.loadedJSON));
 
@@ -440,9 +460,9 @@ window.makeScript = function() {
             });
         }
     });
-
-
     Argon.wavList.forEach(function(wav, index) {
+        //wav string to Html5 blob
+        //https://stackoverflow.com/a/13285672
         var wavString = wav.data;
         var len = wavString.length;
         var buf = new ArrayBuffer(len);
@@ -453,8 +473,6 @@ window.makeScript = function() {
         var blob = new Blob([view], {
             type: "audio/x-wav"
         });
-        console.log(blob)
-            //console.log(buffer)
         zip.file(index.toString() + '.' + wav.type, blob, {
             binary: true
         });
@@ -486,10 +504,6 @@ window.makeScript = function() {
             // see FileSaver.js
             saveAs(content, "argonEdit.sb2");
         });
-
-
-
-
 };
 window.loadWorkspace = function() {
     var xmlText = localStorage.getItem("blockly.xml");

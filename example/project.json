@@ -10,8 +10,8 @@
 		}],
 	"costumes": [{
 			"costumeName": "backdrop1",
-			"baseLayerID": 4,
-			"baseLayerMD5": "b61b1077b0ea1931abee9dbbfa7903ff.png",
+			"baseLayerID": 3,
+			"baseLayerMD5": "901270385ca8d153ce1834e304ad2b5f.png",
 			"bitmapResolution": 2,
 			"rotationCenterX": 480,
 			"rotationCenterY": 360
@@ -23,13 +23,11 @@
 	"videoAlpha": 0.5,
 	"children": [{
 			"objName": "Sprite1",
-			"scripts": [[31,
-					85,
-					[["whenGreenFlag"], ["forward:", 10], ["turnRight:", 15], ["forward:", 10]]]],
+			"scripts": [[73, 59, [["whenGreenFlag"]]], [116, 116, [["whenKeyPressed", "space"]]]],
 			"sounds": [{
 					"soundName": "meow",
 					"soundID": 0,
-					"md5": "83c36d806dc92327b9e7049a565c6bff.wav",
+					"md5": "3dec0993dcc7bfbc812d16dc34574f6f.wav",
 					"sampleCount": 18688,
 					"rate": 22050,
 					"format": ""
@@ -50,56 +48,26 @@
 					"rotationCenterX": 47,
 					"rotationCenterY": 55
 				}],
-			"currentCostumeIndex": 1,
-			"scratchX": -74.17230183311283,
-			"scratchY": 97.78193886033354,
+			"currentCostumeIndex": 0,
+			"scratchX": 0,
+			"scratchY": 0,
 			"scale": 1,
-			"direction": 98.13010235415598,
+			"direction": 90,
 			"rotationStyle": "normal",
 			"isDraggable": false,
 			"indexInLibrary": 1,
 			"visible": true,
 			"spriteInfo": {
 			}
-		},
-		{
-			"objName": "Sprite2",
-			"sounds": [{
-					"soundName": "pop",
-					"soundID": 1,
-					"md5": "83a9787d4cb6f3b7632b4ddfebf74367.wav",
-					"sampleCount": 258,
-					"rate": 11025,
-					"format": ""
-				}],
-			"costumes": [{
-					"costumeName": "costume1",
-					"baseLayerID": 3,
-					"baseLayerMD5": "cd21514d0531fdffb22204e0ec5ed84a.svg",
-					"bitmapResolution": 1,
-					"rotationCenterX": 0,
-					"rotationCenterY": 0
-				}],
-			"currentCostumeIndex": 0,
-			"scratchX": 10,
-			"scratchY": -26,
-			"scale": 1,
-			"direction": 90,
-			"rotationStyle": "normal",
-			"isDraggable": false,
-			"indexInLibrary": 2,
-			"visible": true,
-			"spriteInfo": {
-			}
 		}],
 	"info": {
 		"videoOn": false,
-		"projectID": "165084534",
+		"swfVersion": "v456",
 		"flashVersion": "LNX 25,0,0,171",
 		"userAgent": "Mozilla\/5.0 (X11; CrOS x86_64 9334.72.0) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/58.0.3029.140 Safari\/537.36",
-		"scriptCount": 1,
-		"swfVersion": "v456",
+		"scriptCount": 2,
+		"projectID": "167128131",
 		"hasCloudData": false,
-		"spriteCount": 2
+		"spriteCount": 1
 	}
 }

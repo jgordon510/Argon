@@ -37,24 +37,26 @@ var Argon = {
                 scaleSpeed: 1.1
             }
         });
-        window.workspace.registerButtonCallback("createEventPressed", createEvent)
+        window.workspace.registerButtonCallback("createEventPressed", createEvent);
 
         function createEvent() {
             console.log("test")
         }
     },
     initData: function(data) {
-
         window.eventsData = data.events;
-
-        window.variableOptionsArray = [];
-
-        if (typeof data.variables === 'undefined') data.variables = [];
+        if (typeof data.variables === 'undefined') {
+            data.variables = [];
+        }
+        else window.variableOptionsArray = []; //clear the default "variable1" value
         data.variables.forEach(function(variable) {
             window.variableOptionsArray.push([variable.name, variable.name]);
         });
 
-        window.listOptionsArray = [];
+        if (typeof data.lists === 'undefined') {
+            data.lists = [];
+        }
+        else window.listOptionsArray = []; //clear the default "variable1" value
         if (typeof data.lists === 'undefined') data.lists = [];
         data.lists.forEach(function(list) {
             window.listOptionsArray.push([list.listName, list.listName]);
@@ -343,23 +345,80 @@ window.dumpObj = function() {
 }
 
 window.makeScript = function() {
-    var blocklyObj = window.dumpObj();
-    console.log(blocklyObj)
-    var newScript = [];
-    newScript.push(Math.round(parseInt(blocklyObj._x) / Argon.scale.x))
-    newScript.push(Math.round(parseInt(blocklyObj._y) / Argon.scale.y))
-    newScript.push([[blocklyObj._type]])
-    if (typeof blocklyObj.next !== 'undefined') {
-        addBlock(blocklyObj.next.block)
-    }
+    var blocklyObjs = window.dumpObj();
+    if (typeof blocklyObjs === 'undefined') blocklyObjs = [];
+    blocklyObjs.forEach(function(blocklyObj, index) {
+        var newScript = [];
+        console.log(blocklyObj);
+        newScript.push(Math.round(parseInt(blocklyObj._x) / Argon.scale.x));
+        newScript.push(Math.round(parseInt(blocklyObj._y) / Argon.scale.y));
+        newScript.push([
+            [blocklyObj._type]
+        ]);
+        addBlock(blocklyObj, true);
 
-    //console.log(newScript)
+        function addBlock(block, initial) {
+            console.log("BLOCK:");
+            console.log(block);
+            if (!initial) newScript[2].push([block._type]);
+            if (typeof block.value !== 'undefined') {
+                console.log("VALUE:");
+                //we need to see if it's an array of values or just a single one
+                //the single object can't be iterated
+                if (typeof block.value[1] !== 'undefined') {
+                    block.value.forEach(function(value) {
+                        newScript[2][newScript[2].length - 1].push(value.block.field.__text);
+                    });
+                }
+                else {
+                    newScript[2][newScript[2].length - 1].push(block.value.block.field.__text);
+                }
 
-    //replace this with the current selection
-    Argon.spriteData[0].scripts[0] = newScript;
-    Argon.loadedJSON.children[0].scripts[0] = newScript;
-    console.log(Argon.loadedJSON.children[0].scripts[0])
+            }
+            if (typeof block.field !== 'undefined') {
+                console.log("FIELD:");
+                console.log(block.field);
+                newScript[2][newScript[2].length - 1].push(block.field.__text);
+            }
+            if (typeof block.next !== 'undefined') {
+                addBlock(block.next.block);
+            }
+        }
+        //console.log(newScript)
 
+        //replace this with the current selection
+        console.log(Argon.spriteData[index])
+        if (typeof Argon.spriteData[0].scripts !== 'undefined') {
+            console.log(newScript)
+            Argon.spriteData[0].scripts[index] = newScript;
+            Argon.loadedJSON.children[0].scripts[index] = newScript;
+            //console.log(Argon.loadedJSON.children[0].scripts[index])
+        }
+
+    })
+
+
+
+    var id = 1;
+    Argon.loadedJSON.children.forEach(function(sprite) {
+        // console.log(sprite)
+        sprite.costumes.forEach(function(costume) {
+            costume.baseLayerID = id;
+            id++;
+        });
+    });
+    Argon.loadedJSON.costumes.forEach(function(costume) {
+        costume.baseLayerID = id;
+        id++;
+    });
+    id = 0;
+    Argon.loadedJSON.children.forEach(function(sprite) {
+        // console.log(sprite)
+        sprite.sounds.forEach(function(sound) {
+            sound.soundID = id;
+            id++;
+        });
+    });
     var zip = new JSZip();
     zip.file('project.json', JSON.stringify(Argon.loadedJSON));
 
@@ -368,7 +427,6 @@ window.makeScript = function() {
     });
 
     Argon.imgList.forEach(function(image, index) {
-        console.log(index, image)
         var position = (index + 1).toString();
         if (image.type === 'svg') {
             zip.file(position + '.svg', image.data);
@@ -377,20 +435,26 @@ window.makeScript = function() {
             zip.file(position + '.' + image.type, getBase64Image(image.data), {
                 base64: true
             });
-
         }
-
     });
 
+
     Argon.wavList.forEach(function(wav, index) {
-        console.log(index, wav)
-        var buffer = wav.data;
-        zip.file(index.toString() + '.' + wav.type, wav.data, {
-            base64: true
+        var wavString = wav.data;
+        var len = wavString.length;
+        var buf = new ArrayBuffer(len);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i < len; i++) {
+            view[i] = wavString.charCodeAt(i) & 0xff;
+        }
+        var blob = new Blob([view], {
+            type: "audio/x-wav"
         });
-
-
-
+        console.log(blob)
+            //console.log(buffer)
+        zip.file(index.toString() + '.' + wav.type, blob, {
+            binary: true
+        });
     });
 
     function getBase64Image(img) {
@@ -420,19 +484,7 @@ window.makeScript = function() {
             saveAs(content, "argonEdit.sb2");
         });
 
-    function addBlock(block) {
-        console.log("BLOCK:");
-        console.log(block);
-        newScript[2].push([block._type]);
-        if (typeof block.value !== 'undefined') {
-            console.log("VALUE:");
-            console.log(block.value.block.field.__text);
-            newScript[2][newScript[2].length - 1].push(parseInt(block.value.block.field.__text, 10));
-        }
-        if (typeof block.next !== 'undefined') {
-            addBlock(block.next.block);
-        }
-    }
+
 
 
 };

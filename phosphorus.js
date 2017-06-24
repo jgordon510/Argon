@@ -284,6 +284,9 @@ var P = (function() {
   IO.load = function(url, callback, self, type) {
     var request = new Request;
     var xhr = new XMLHttpRequest;
+    //this will allow audio files to load
+    //might need to be forked for other stuff
+    xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
     xhr.open('GET', url, true);
     xhr.onprogress = function(e) {
       request.progress(e.loaded, e.total, e.lengthComputable);
@@ -329,6 +332,7 @@ var P = (function() {
     request.defer = true;
     var url = IO.PROJECT_URL + id + '/get/';
     request.add(IO.load(url).onLoad(function(contents) {
+      // console.log(JSON.stringify(contents))
       try {
         var json = IO.parseJSONish(contents);
       }
@@ -347,8 +351,10 @@ var P = (function() {
         return;
       }
       try {
+        // console.log(JSON.stringify(json.children[0].sounds[0].soundID))
         IO.loadProject(json);
         Argon.loadedJSON = json;
+
         if (callback) request.onLoad(callback.bind(self));
         if (request.isDone) {
           request.load(new Stage().fromJSON(json));
@@ -913,45 +919,14 @@ var P = (function() {
       Argon.wavList.push(null);
       var cb = function(ab) {
         IO.decodeAudio(ab, function(buffer) {
-          // start a new worker 
-          // we can't use Recorder directly, since it doesn't support what we're trying to do
-          var worker = new Worker('recorderWorker.js');
-
-          // initialize the new worker
-          worker.postMessage({
-            command: 'init',
-            config: {
-              sampleRate: 44100
-            }
-          });
-
-          // callback for `exportWAV`
-          worker.onmessage = function(e) {
-            var blob = e.data;
-            console.log(blob)
-            Argon.wavList[lastIndex] = {type:ext,data:blob};
-            // this is would be your WAV blob
-          };
-
-          // send the channel data from our buffer to the worker
-          worker.postMessage({
-            command: 'record',
-            buffer: [
-              buffer.getChannelData(0)
-            ]
-          });
-
-          // ask the worker for a WAV
-          worker.postMessage({
-            command: 'exportWAV',
-            type: 'audio/wav'
-          });
-
-          Argon.wavList[lastIndex] = {
-            type: ext,
-            data: buffer
-          };
-
+          //add the audio data to the list
+          IO.load(IO.ASSET_URL + md5 + '/get/', addToList);
+          function addToList(e) {
+            Argon.wavList[lastIndex] = {
+              type: ext,
+              data: e
+            };
+          }
           callback(buffer);
           request.load(buffer);
         });

@@ -27,21 +27,9 @@ goog.provide('Blockly.Constants.Colour');
 goog.require('Blockly.Blocks');
 
 
-// {
-//     "type": "",
-//     "message0": "message: %1",
-//     "args0": [{
-//       "type": "field_dropdown",
-//       "name": "VALUE1",
-//       "options": [
-//         ["event", "ITEM1"]
-//       ]
-//     }],
-//     "colour": 20,
-//     "output": "Message"
-//   }
+window.eventOptionsArray = []
 window.eventOptions = function() {
-  console.log(window.eventOptionsArray)
+  
   if(window.eventOptionsArray.length === 0) window.eventOptionsArray.push(["message1","message1"]);
   
   return window.eventOptionsArray;

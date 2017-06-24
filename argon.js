@@ -346,7 +346,10 @@ window.dumpObj = function() {
 
 window.makeScript = function() {
     var blocklyObjs = window.dumpObj();
+    
     if (typeof blocklyObjs === 'undefined') blocklyObjs = [];
+    //account for single scripts
+    if(typeof blocklyObjs[1] === 'undefined') blocklyObjs = [blocklyObjs];
     blocklyObjs.forEach(function(blocklyObj, index) {
         var newScript = [];
         console.log(blocklyObj);

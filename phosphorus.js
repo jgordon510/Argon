@@ -499,12 +499,14 @@ var P = (function() {
   };
 
   IO.loadProject = function(data, cb) {
-    Argon.loadBlockly(); //make the blockly div
+    if(!Argon.loaded) Argon.loadBlockly(); //make the blockly div
     //setup all the data stuff
     //spriteData is setup elsewhere in phosphorous
     Argon.initData(JSON.parse(JSON.stringify(data)))
     IO.loadWavs();
     IO.loadArray(data.children, IO.loadObject);
+    console.log("here")
+    //Argon.spriteData = [];
     IO.loadBase(data);
     //render the first sprite
     Argon.makeSelector();
@@ -697,7 +699,8 @@ var P = (function() {
 
   IO.loadBase = function(data) {
     //pass a copy of the data for argon to render the blocks
-    Argon.spriteData.push(JSON.parse(JSON.stringify(data)));
+    console.log("here")
+    if(!Argon.loaded) Argon.spriteData.push(JSON.parse(JSON.stringify(data)));
     Argon.player.data = data;
     Argon.IO = IO;
     data.scripts = data.scripts || [];
@@ -718,6 +721,7 @@ var P = (function() {
 
   IO.loadObject = function(data) {
     if (!data.cmd && !data.listName) {
+      //clear the spriteData
       IO.loadBase(data);
     }
   };
@@ -933,8 +937,8 @@ var P = (function() {
           //svg.style.top = '-10000px';
 
 
-          document.body.appendChild(svg);
-
+          Argon.loadedSVGS.push(document.body.appendChild(svg));
+          
           var viewBox = svg.viewBox.baseVal;
 
           if (viewBox && (viewBox.x || viewBox.y)) {
@@ -975,6 +979,8 @@ var P = (function() {
 
           image.onload = function() {
             if (callback) callback(image);
+            //console.log(test);
+            
             request.load();
           };
           image.onerror = function(e) {
@@ -2923,6 +2929,7 @@ P.compile = (function() {
 
     var val = function(e, usenum, usebool) {
       var v;
+      console.log(e)
       if (typeof e === 'number' || typeof e === 'boolean') {
 
         return '' + e;
@@ -2940,7 +2947,7 @@ P.compile = (function() {
 
       }
       else if (e[0] === 'getParam') { /* Data */
-
+        
         return param(e[1], usenum, usebool);
 
       }
@@ -4681,6 +4688,8 @@ P.runtime = (function() {
     window.interval = null;
     P.Stage.prototype.start = function() {
       console.log("starting")
+      Argon.loaded = true;
+      Argon.clearSVGS();
       this.isRunning = true;
       if (this.interval) {
         return;

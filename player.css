@@ -8,11 +8,15 @@
 
 #spriteSelection {
   display: inline;
+  font-size: 120%;
 }
 #startButton {
   display: inline;
 }
 
+#blocklyDiv {
+  padding: 2px 0px 0px 0px;
+}
 #greenFlag {
   color: green;
 }
@@ -44,7 +48,8 @@
 }
 .controls {
   position: relative;
-  height: 32px;
+  /*height: 32px;*/
+  height: 5px;
 }
 .controls span,
 .project-link {

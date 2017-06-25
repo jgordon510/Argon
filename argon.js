@@ -2,28 +2,26 @@ var Argon = {
     spriteData: [],
     imgList: [],
     wavList: [],
+    loadedSVGS: [],
+    //sulfurous loads the SVGs at the bottom of the document
+    //for some reason they're not getting removed on load
+    //so I put them in the loadSVGS array and hide, not remove, them on
+    //start
+    clearSVGS: function() {
+        Argon.loadedSVGS.forEach(function(svg) {
+            svg.style.display = 'none';
+        });
+    } ,
     player: {
         refresh: function() {
-                //Argon.spriteData.push(JSON.parse(JSON.stringify(data)));
-                //Argon.player.data = data;
+                //TODO: forEach so we can save all sprites and stage
                 Argon.player.data.scripts = Argon.spriteData[0].scripts || [];
-                // Argon.player.data.costumes = Argon.IO.loadArray(Argon.spriteData.costumes, Argon.IO.loadCostume);
-                // Argon.player.data.sounds = Argon.IO.loadArray(Argon.spriteData.sounds, Argon.IO.loadSound);
-                // Argon.player.data.variables = Argon.spriteData.variables || [];
-                // Argon.player.data.lists = Argon.spriteData.lists || [];
                 window.makeScript(false);
-                // stage.children[0].scripts = Argon.spriteData[0].scripts
-                // //Argon.compile(stage)
-                // P.compile(stage)
-                // 
                 Argon.refreshing = true;
                 Argon.imgList = [];
                 Argon.wavList = [];
                 Argon.loadProject(Argon.loadedJSON);
-                //Argon.flagClick();
-                //();
             }
-            //Argon.player.reload.call(Argon.player.stage)
     },
     makeSelector: function() {
         //add a dropdown menu for the sprite selection
@@ -35,6 +33,7 @@ var Argon = {
         var spriteSelector = document.getElementById("spriteSelection");
         spriteSelector.innerHTML = HTML;
         spriteSelector.onchange = function(e) {
+            
             Argon.renderBlocks(JSON.parse(JSON.stringify(Argon.spriteData[e.target.selectedIndex])));
         };
     },
@@ -48,13 +47,13 @@ var Argon = {
         // player-area should take the whole screen vertically
         document.getElementById('player-area').setAttribute("style", 'height: ' + (window.innerHeight).toString() + 'px; width:' + 99 + '%');
         // blockly div should fill the space below the player
-        document.getElementById('blocklyDiv').setAttribute("style", 'height: ' + (window.innerHeight - 440).toString() + 'px; width:' + 99 + '%');
+        document.getElementById('blocklyDiv').setAttribute("style", 'height: ' + (window.innerHeight - 420).toString() + 'px; width:' + 99 + '%');
 
         window.workspace = Blockly.inject('blocklyDiv', {
             toolbox: document.getElementById('toolbox'),
             zoom: { //this allows zooming the workspace
                 controls: true,
-                startScale: 0.8,
+                startScale: 0.5,
                 maxScale: 3,
                 minScale: 0.3,
                 scaleSpeed: 1.1
@@ -91,6 +90,7 @@ var Argon = {
         y: 1.3
     },
     renderBlocks: function(data) {
+        
         var scale = {
             x: 2,
             y: 1.3
@@ -388,6 +388,7 @@ window.makeScript = function(save) {
 
         //this function adds a block to the target block
         function addBlock(block, target) {
+            // console.log(block)
             //add the block to the target
             //we've already added the top block
             if (target !== null) {
@@ -404,9 +405,18 @@ window.makeScript = function(save) {
                     block.value.forEach(function(value) {
                         target[target.length - 1].push(value.block.field.__text);
                     });
-                }
+                } 
                 else {
-                    target[target.length - 1].push(block.value.block.field.__text);
+                    if( block.value.block._type === 'input')
+                    {
+                        target[target.length - 1].push(block.value.block.field.__text);
+                    } else
+                    {   
+                        console.log("VARIABLE/LIST HANDLER")
+                        target[target.length - 1].push([block.value.block._type, block.value.block.field.__text]);
+                        
+                    }
+                    
                 }
 
             }
@@ -442,10 +452,13 @@ window.makeScript = function(save) {
     var id = 1; //1-index
     Argon.loadedJSON.children.forEach(function(sprite) {
         //all the costumes
-        sprite.costumes.forEach(function(costume) {
-            costume.baseLayerID = id;
-            id++;
-        });
+        if (typeof sprite.costumes !== 'undefined') {
+            sprite.costumes.forEach(function(costume) {
+                costume.baseLayerID = id;
+                id++;
+            });
+        }
+
     });
     //apply to the stage itself also
     Argon.loadedJSON.costumes.forEach(function(costume) {
@@ -455,17 +468,34 @@ window.makeScript = function(save) {
     //now do the sounds the same way
     id = 0;
     Argon.loadedJSON.children.forEach(function(sprite) {
-        sprite.sounds.forEach(function(sound) {
-            sound.soundID = id;
-            id++;
-        });
+        if (typeof sprite.sounds !== 'undefined') {
+            sprite.sounds.forEach(function(sound) {
+                sound.soundID = id;
+                id++;
+            });
+        }
+
     });
     //apply to the stage itself also
     Argon.loadedJSON.sounds.forEach(function(sound) {
         sound.soundID = id;
         id++;
     });
-    //save it
+    
+    //todo: this needs more logic to deal with existing variables
+    //this will not retain value, for example
+    //probably other problems too
+    Argon.loadedJSON.variables = [];
+    window.variableOptionsArray.forEach(function(variable) {
+        console.log(variable)
+            Argon.loadedJSON.variables.push({
+                "name": variable[0],
+                "value": 0,
+                "isPersistent": false
+            });
+
+        })
+        //save it
     var zip = new JSZip();
     zip.file('project.json', JSON.stringify(Argon.loadedJSON));
 
@@ -519,12 +549,12 @@ window.makeScript = function(save) {
             // guess the original format, but be aware the using "image/jpg"
             // will re-encode the image.
             dataURL = canvas.toDataURL("image/png");
-        } else
-        {
+        }
+        else {
             dataURL = img;
         }
 
-        
+
         return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
     }
 

@@ -1,8 +1,8 @@
 P.player = (function() {
   'use strict';
-  
+
   var resolution;
-  
+
   var stage;
   var frameId = null;
   var isFullScreen = false;
@@ -24,27 +24,28 @@ P.player = (function() {
 
   var flagTouchTimeout;
 
-  function setResolution(res){
+  function setResolution(res) {
     resolution = res;
     player.style.width = resolution + 'px';
-    player.style.height = resolution*3/4 + 'px'
-  } 
-  
+    player.style.height = resolution * 3 / 4 + 'px'
+  }
+
   function flagTouchStart() {
     flagTouchTimeout = setTimeout(function() {
       turboClick();
       flagTouchTimeout = true;
     }, 500);
   }
+
   function turboClick() {
     stage.isTurbo = !stage.isTurbo;
     flag.title = stage.isTurbo ? 'Turbo mode enabled. Shift+click to disable.' : 'Shift+click to enable turbo mode.';
     turbo.style.display = stage.isTurbo ? 'block' : 'none';
   }
   Argon.flagClick = flagClick
+
   function flagClick(e) {
-    if(typeof e === 'undefined')
-    {
+    if (typeof e === 'undefined') {
       e = {
         shiftKey: false,
         preventDefault: function() {}
@@ -57,7 +58,8 @@ P.player = (function() {
     }
     if (e.shiftKey) {
       turboClick();
-    } else {
+    }
+    else {
       stage.start();
       pause.className = 'pause';
       stage.stopAll();
@@ -72,7 +74,8 @@ P.player = (function() {
     if (stage.isRunning) {
       stage.pause();
       pause.className = 'play';
-    } else {
+    }
+    else {
       stage.start();
       pause.className = 'pause';
     }
@@ -90,33 +93,41 @@ P.player = (function() {
   }
 
   function fullScreenClick(e) {
+    console.log("here")
     if (e) e.preventDefault();
     if (!stage) return;
     document.documentElement.classList.toggle('fs');
     isFullScreen = !isFullScreen;
+    var blocklyDiv = document.getElementById('blocklyDiv')
     if (!e || !e.shiftKey) {
       if (isFullScreen) {
+        blocklyDiv.style.display = 'none';
         var el = document.documentElement;
         if (el.requestFullScreenWithKeys) {
           el.requestFullScreenWithKeys();
-        } else if (el.webkitRequestFullScreen) {
+        }
+        else if (el.webkitRequestFullScreen) {
           el.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         }
-      } else {
+      }
+      else {
+        blocklyDiv.style.display = 'block';
         if (document.exitFullscreen) {
           document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) {
+        }
+        else if (document.mozCancelFullScreen) {
           document.mozCancelFullScreen();
-        } else if (document.webkitCancelFullScreen) {
+        }
+        else if (document.webkitCancelFullScreen) {
           document.webkitCancelFullScreen();
         }
       }
     }
     if (!isFullScreen) {
       document.body.style.width =
-      document.body.style.height =
-      document.body.style.marginLeft =
-      document.body.style.marginTop = '';
+        document.body.style.height =
+        document.body.style.marginLeft =
+        document.body.style.marginTop = '';
     }
     updateFullScreen();
     if (!stage.isRunning) {
@@ -145,8 +156,9 @@ P.player = (function() {
       document.body.style.marginLeft = (window.innerWidth - w) / 2 + 'px';
       document.body.style.marginTop = (window.innerHeight - h - padding) / 2 + 'px';
       stage.setZoom(w / 480);
-    } else {
-      stage.setZoom(resolution ? resolution/480 : 1);
+    }
+    else {
+      stage.setZoom(resolution ? resolution / 480 : 1);
     }
   }
 
@@ -155,7 +167,7 @@ P.player = (function() {
   }
 
   window.addEventListener('resize', updateFullScreen);
-
+  Argon.fullScreenClick = fullScreenClick
   if (P.hasTouchEvents) {
     flag.addEventListener('touchstart', flagTouchStart);
     flag.addEventListener('touchend', flagClick);
@@ -171,27 +183,28 @@ P.player = (function() {
     document.addEventListener('touchmove', function(e) {
       if (isFullScreen) e.preventDefault();
     });
-  } else {
+  }
+  else {
     flag.addEventListener('click', flagClick);
     pause.addEventListener('click', pauseClick);
     stop.addEventListener('click', stopClick);
     fullScreen.addEventListener('click', fullScreenClick);
   }
 
-  document.addEventListener("fullscreenchange", function () {
+  document.addEventListener("fullscreenchange", function() {
     if (isFullScreen !== document.fullscreen) fullScreenClick();
   });
-  document.addEventListener("mozfullscreenchange", function () {
+  document.addEventListener("mozfullscreenchange", function() {
     if (isFullScreen !== document.mozFullScreen) fullScreenClick();
   });
-  document.addEventListener("webkitfullscreenchange", function () {
+  document.addEventListener("webkitfullscreenchange", function() {
     if (isFullScreen !== document.webkitIsFullScreen) fullScreenClick();
   });
 
   function load(id, cb, titleCallback) {
     P.player.projectId = id;
     P.player.projectURL = id ? 'https://scratch.mit.edu/projects/' + id + '/' : '';
-	
+
     if (stage) {
       stage.stopAll();
       stage.pause();
@@ -207,7 +220,8 @@ P.player = (function() {
       P.IO.loadScratchr2ProjectTitle(id, function(title) {
         if (titleCallback) titleCallback(P.player.projectTitle = title);
       });
-    } else {
+    }
+    else {
       if (titleCallback) setTimeout(function() {
         titleCallback('');
       });
@@ -238,13 +252,13 @@ P.player = (function() {
       }, 100);
 
       var zoom = stage ? stage.zoom : 1;
-      zoom = resolution ? resolution/480 : zoom;
-      
+      zoom = resolution ? resolution / 480 : zoom;
+
       window.stage = stage = s;
       stage.start();
       stage.setZoom(zoom);
       //stage.setZoom(2);
-      
+
       stage.root.addEventListener('keydown', exitFullScreen);
       stage.handleError = showError;
 

@@ -285,7 +285,7 @@ var Argon = {
                             if (typeof scriptObj.block.field === 'undefined') scriptObj.block.field = [];
                             var name = "VALUE" + i.toString();
                             //we need to treat variable, list, and event dropdowns a little differently
-                            var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:', 'setVar:to:'];
+                            var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:', 'setVar:to:', 'changeVar'];
                             //the dropdown is always in the first position; we just need to set the name prop 
                             //console.log(scriptObj.block)
                             // console.log(i,blockArray[0] )

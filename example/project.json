@@ -1,7 +1,7 @@
 {
 	"objName": "Stage",
 	"variables": [{
-			"name": "variable1",
+			"name": "length",
 			"value": 0,
 			"isPersistent": false
 		}],
@@ -16,7 +16,7 @@
 	"costumes": [{
 			"costumeName": "backdrop1",
 			"baseLayerID": 3,
-			"baseLayerMD5": "739b5e2a2435f6e1ec2993791b423146.png",
+			"baseLayerMD5": "ad53b7aeb08c97c2f2c4f2f528a086f5.png",
 			"bitmapResolution": 1,
 			"rotationCenterX": 240,
 			"rotationCenterY": 180
@@ -28,7 +28,12 @@
 	"videoAlpha": 0.5,
 	"children": [{
 			"objName": "Sprite1",
-			"scripts": [[163, 77, [["whenGreenFlag"], ["forward:", ["readVariable", "variable1"]]]]],
+			"variables": [{
+					"name": "local",
+					"value": 0,
+					"isPersistent": false
+				}],
+			"scripts": [[63, 15, [["whenGreenFlag"], ["setVar:to:", "length", 0], ["setVar:to:", "local", "30"]]]],
 			"sounds": [{
 					"soundName": "meow",
 					"soundID": 0,
@@ -68,9 +73,9 @@
 		{
 			"target": "Stage",
 			"cmd": "getVar:",
-			"param": "variable1",
+			"param": "length",
 			"color": 15629590,
-			"label": "variable1",
+			"label": "length",
 			"mode": 1,
 			"sliderMin": 0,
 			"sliderMax": 100,
@@ -78,15 +83,29 @@
 			"x": 5,
 			"y": 5,
 			"visible": true
+		},
+		{
+			"target": "Sprite1",
+			"cmd": "getVar:",
+			"param": "local",
+			"color": 15629590,
+			"label": "Sprite1: local",
+			"mode": 1,
+			"sliderMin": 0,
+			"sliderMax": 100,
+			"isDiscrete": true,
+			"x": 5,
+			"y": 32,
+			"visible": true
 		}],
 	"info": {
 		"videoOn": false,
-		"swfVersion": "v456",
+		"projectID": "167245897",
 		"flashVersion": "LNX 25,0,0,171",
-		"hasCloudData": false,
 		"userAgent": "Mozilla\/5.0 (X11; CrOS x86_64 9334.72.0) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/58.0.3029.140 Safari\/537.36",
 		"scriptCount": 1,
-		"projectID": "167232112",
+		"swfVersion": "v456",
+		"hasCloudData": false,
 		"spriteCount": 1
 	}
 }

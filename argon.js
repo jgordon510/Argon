@@ -11,17 +11,17 @@ var Argon = {
         Argon.loadedSVGS.forEach(function(svg) {
             svg.style.display = 'none';
         });
-    } ,
+    },
     player: {
         refresh: function() {
-                //TODO: forEach so we can save all sprites and stage
-                Argon.player.data.scripts = Argon.spriteData[0].scripts || [];
-                window.makeScript(false);
-                Argon.refreshing = true;
-                Argon.imgList = [];
-                Argon.wavList = [];
-                Argon.loadProject(Argon.loadedJSON);
-            }
+            //TODO: forEach so we can save all sprites and stage
+            Argon.player.data.scripts = Argon.spriteData[0].scripts || [];
+            window.makeScript(false);
+            Argon.refreshing = true;
+            Argon.imgList = [];
+            Argon.wavList = [];
+            Argon.loadProject(Argon.loadedJSON);
+        }
     },
     makeSelector: function() {
         //add a dropdown menu for the sprite selection
@@ -33,7 +33,7 @@ var Argon = {
         var spriteSelector = document.getElementById("spriteSelection");
         spriteSelector.innerHTML = HTML;
         spriteSelector.onchange = function(e) {
-            
+
             Argon.renderBlocks(JSON.parse(JSON.stringify(Argon.spriteData[e.target.selectedIndex])));
         };
     },
@@ -90,7 +90,7 @@ var Argon = {
         y: 1.3
     },
     renderBlocks: function(data) {
-        
+
         var scale = {
             x: 2,
             y: 1.3
@@ -98,12 +98,12 @@ var Argon = {
         //these variables/lists are for this sprite only
         if (typeof data.variables !== 'undefined') {
             data.variables.forEach(function(variable) {
-                window.variableOptionsArray.push([data.objName + ": " + variable.name, variable.name]);
+                window.variableOptionsArray.push([data.objName + ": " +variable.name, variable.name]);
             });
         }
         if (typeof data.lists !== 'undefined') {
             data.lists.forEach(function(list) {
-                window.listOptionsArray.push([data.objName + ": " + list.listName, list.listName]);
+                window.listOptionsArray.push([data.objName + ": " +list.listName, list.listName]); //data.objName + ": " +list.listName
             });
         }
         //the scriptObj holds the scripts once they've
@@ -112,7 +112,9 @@ var Argon = {
             block: []
         };
         if (typeof data.scripts === 'undefined') data.scripts = [];
+
         data.scripts.forEach(function(originalScript) {
+
             //a blockArray to hold the new script blocks
             var script = originalScript.slice();
 
@@ -162,18 +164,9 @@ var Argon = {
             }
 
             function addInputs(scriptObj, blockArray) {
-                if (blockArray[0] === 'setVar:to:') {
-                    // console.log("EXCEPTION")
-                    // var newArray = [blockArray[0]];
-                    // for (var i = 1; i < blockArray.length; i++) {
 
-                    //     newArray.push(blockArray[i]);
-                    // }
-                    // blockArray = newArray;
-                }
                 //go through the blockArray starting with the 1st input
                 //which is at index 1
-
                 for (var i = 1; i < blockArray.length; i++) {
                     //ignore null values
                     if (blockArray[i] != null) {
@@ -183,14 +176,16 @@ var Argon = {
                             //check to make sure the block is formatted as an array
                             if (blockArray[i][0] === "readVariable" || blockArray[i][0] === "contentsOfList:") {
                                 //we're dealing with a variable
+                                console.log(blockArray[i][1])
                                 scriptObj.block.value.push({
+                                        
                                     _name: "VALUE" + i.toString(),
                                     block: {
                                         _type: blockArray[i][0],
                                         _id: makeid(),
                                         field: {
                                             __text: blockArray[i][1],
-                                            _name: "FIELDNAME"
+                                            _name: "VARIABLE"
                                         }
                                     }
                                 });
@@ -267,6 +262,12 @@ var Argon = {
                             if (blockArray[0] === 'whenIReceive') type = 'message';
                             if (blockArray[0] === 'doBroadcastAndWait') type = 'message';
                             if (blockArray[0] === 'broadcast:') type = 'message';
+                            console.log(scriptObj.block)
+                            var name = "FIELDNAME"
+                            if(type === 'readVariable')
+                            {
+                                name = "VARIABLE"
+                            }
                             scriptObj.block.value.push({
                                 _name: "VALUE" + i.toString(),
                                 block: {
@@ -274,7 +275,7 @@ var Argon = {
                                     _id: makeid(),
                                     field: [{
                                         __text: text,
-                                        _name: "FIELDNAME"
+                                        _name: name
                                     }]
                                 }
                             });
@@ -284,13 +285,20 @@ var Argon = {
                             if (typeof scriptObj.block.field === 'undefined') scriptObj.block.field = [];
                             var name = "VALUE" + i.toString();
                             //we need to treat variable, list, and event dropdowns a little differently
-                            var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:'];
+                            var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:', 'setVar:to:'];
                             //the dropdown is always in the first position; we just need to set the name prop 
-                            if (i === 1 && dropdownList.indexOf(blockArray[0]) > -1) name = "FIELDNAME";
+                            //console.log(scriptObj.block)
+                            // console.log(i,blockArray[0] )
+                            if (i === 1 && dropdownList.indexOf(blockArray[0]) > -1) {
+                                // console.log("found a variable")
+                                name = blockArray[1];
+                            }
+                            // console.log(name)
                             scriptObj.block.field.push({
                                 __text: blockArray[i].toString(),
                                 _name: name
                             });
+                            console.log(scriptObj.block.field)
                             if (typeof window.eventOptionsArray === 'undefined') window.eventOptionsArray = [];
                             if (blockArray[0] === 'whenIReceive' && window.eventOptionsArray.indexOf(blockArray[0]) === -1) {
                                 window.eventOptionsArray.push([blockArray[1], blockArray[1]]);
@@ -315,8 +323,8 @@ var Argon = {
 
         //make the xmlText for blockly
         var xmlText = x2js.json2xml_str(finalObject)
-
-        //these will prevent null warnings on blank statements and values
+        console.log(xmlText)
+            //these will prevent null warnings on blank statements and values
         xmlText = replaceAll(xmlText, '<value/>', '');
         xmlText = replaceAll(xmlText, '<statement/>', '');
 
@@ -405,18 +413,17 @@ window.makeScript = function(save) {
                     block.value.forEach(function(value) {
                         target[target.length - 1].push(value.block.field.__text);
                     });
-                } 
+                }
                 else {
-                    if( block.value.block._type === 'input')
-                    {
+                    if (block.value.block._type === 'input') {
                         target[target.length - 1].push(block.value.block.field.__text);
-                    } else
-                    {   
+                    }
+                    else {
                         console.log("VARIABLE/LIST HANDLER")
                         target[target.length - 1].push([block.value.block._type, block.value.block.field.__text]);
-                        
+
                     }
-                    
+
                 }
 
             }
@@ -481,13 +488,13 @@ window.makeScript = function(save) {
         sound.soundID = id;
         id++;
     });
-    
+
     //todo: this needs more logic to deal with existing variables
     //this will not retain value, for example
     //probably other problems too
     Argon.loadedJSON.variables = [];
     window.variableOptionsArray.forEach(function(variable) {
-        console.log(variable)
+            console.log(variable)
             Argon.loadedJSON.variables.push({
                 "name": variable[0],
                 "value": 0,

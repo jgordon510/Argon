@@ -30,7 +30,16 @@
     <div class=turbo>Turbo Mode</div>
     <span class=full-screen></span>
   </div>
-  <div class=player></div><div id="spriteSelection"></div>
+  <div class=player></div>
+  <div class="formWrapper">
+    
+    <div id="startButton"><button id="greenFlag" onclick="Argon.player.refresh()">⚑</button>
+    </div>
+    <div id="spriteSelection"></div>
+    <div id="saveButton"><button onclick="window.makeScript(true)">💾</button>
+    </div>
+  </div>
+
   <div id="blocklyDiv" style="height: 480px; width: 900px;"></div>
   <div class=internal-error>
     An internal error occurred. <a id=error-bug-link target=_blank href=https://github.com/mittagskogel/sulfurous/issues/new>Click here</a> to file a bug report.
@@ -104,9 +113,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="/blockly_compressed.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script>
-  <!--<script src="../blockly/blockly_uncompressed.js"></script>-->
-  <!--<script src="blockly/blocks_compressed.js"></script>-->
-  <!--<script src="blockly/msg/js/en.js"></script>-->
+<!--<script src="../blockly/blockly_uncompressed.js"></script>-->
+<!--<script src="blockly/blocks_compressed.js"></script>-->
+<!--<script src="blockly/msg/js/en.js"></script>-->
 <!--<script src="blockly_predefinedVars.js"></script>-->
 <script src="blocks_motion.js"></script>
 <script src="blocks_data.js"></script>
@@ -225,8 +234,13 @@
       }
 
       document.title = 'sulfurous';
+      console.log(P.player)
       P.player.load(id, function(stage) {
         stage.triggerGreenFlag();
+        // set the method on the Argon player
+        Argon.player.reload = stage.triggerGreenFlag;
+        // we'll need the stage for context
+        Argon.player.stage = stage;
       }, function(title) {
         document.title = title ? title + ' \xb7 sulfurous' : 'sulfurous';
         updateBugLink();
@@ -393,7 +407,7 @@
     <block type="changePenSizeBy:"></block>
     <block type="penSize:"></block>
   </category>
-  <category name="Data" colour="32" >
+  <category name="Data" colour="32">
     <block type="input"></block>
     <block type="colour_input"></block>
     <block type="readVariable"></block>

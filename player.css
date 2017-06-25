@@ -1,3 +1,26 @@
+.formWrapper {
+    width: 100%;
+    font-size: 12px;
+    overflow: hidden; /* contain floated elements */
+    /*background: #ccc*/
+    
+}
+
+#spriteSelection {
+  display: inline;
+}
+#startButton {
+  display: inline;
+}
+
+#greenFlag {
+  color: green;
+}
+
+#saveButton {
+  display: inline;
+}
+
 .progress-bar {
   position: absolute;
   top: 0;

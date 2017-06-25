@@ -41,7 +41,15 @@ P.player = (function() {
     flag.title = stage.isTurbo ? 'Turbo mode enabled. Shift+click to disable.' : 'Shift+click to enable turbo mode.';
     turbo.style.display = stage.isTurbo ? 'block' : 'none';
   }
+  Argon.flagClick = flagClick
   function flagClick(e) {
+    if(typeof e === 'undefined')
+    {
+      e = {
+        shiftKey: false,
+        preventDefault: function() {}
+      };
+    }
     if (!stage) return;
     if (flagTouchTimeout === true) return;
     if (flagTouchTimeout) {

@@ -2,6 +2,29 @@ var Argon = {
     spriteData: [],
     imgList: [],
     wavList: [],
+    player: {
+        refresh: function() {
+                //Argon.spriteData.push(JSON.parse(JSON.stringify(data)));
+                //Argon.player.data = data;
+                Argon.player.data.scripts = Argon.spriteData[0].scripts || [];
+                // Argon.player.data.costumes = Argon.IO.loadArray(Argon.spriteData.costumes, Argon.IO.loadCostume);
+                // Argon.player.data.sounds = Argon.IO.loadArray(Argon.spriteData.sounds, Argon.IO.loadSound);
+                // Argon.player.data.variables = Argon.spriteData.variables || [];
+                // Argon.player.data.lists = Argon.spriteData.lists || [];
+                window.makeScript(false);
+                // stage.children[0].scripts = Argon.spriteData[0].scripts
+                // //Argon.compile(stage)
+                // P.compile(stage)
+                // 
+                Argon.refreshing = true;
+                Argon.imgList = [];
+                Argon.wavList = [];
+                Argon.loadProject(Argon.loadedJSON);
+                //Argon.flagClick();
+                //();
+            }
+            //Argon.player.reload.call(Argon.player.stage)
+    },
     makeSelector: function() {
         //add a dropdown menu for the sprite selection
         var HTML = '<select>';
@@ -45,16 +68,17 @@ var Argon = {
     },
     initData: function(data) {
         window.eventsData = data.events;
-        if (typeof data.variables === 'undefined') {
-            data.variables = [];
+        if (typeof data.variables === 'undefined' || data.variables.length === 0) {
+            data.variables = ["variable1", "variable1"];
         }
         else window.variableOptionsArray = []; //clear the default "variable1" value
+        console.log(data)
         data.variables.forEach(function(variable) {
             window.variableOptionsArray.push([variable.name, variable.name]);
         });
 
-        if (typeof data.lists === 'undefined') {
-            data.lists = [];
+        if (typeof data.lists === 'undefined' || data.lists.length === 0) {
+            data.lists = ["list1", "list1"];
         }
         else window.listOptionsArray = []; //clear the default "variable1" value
         if (typeof data.lists === 'undefined') data.lists = [];
@@ -344,7 +368,7 @@ window.dumpObj = function() {
     return x2js.xml_str2json(xmlText).xml.block;
 }
 
-window.makeScript = function() {
+window.makeScript = function(save) {
     var blocklyObjs = window.dumpObj();
     if (typeof blocklyObjs === 'undefined') blocklyObjs = [];
     //account for single scripts
@@ -357,7 +381,7 @@ window.makeScript = function() {
         newScript.push([
             [blocklyObj._type]
         ]);
-        
+
         //add the block, null means that we'll start with
         //the default: newScript[2]
         addBlock(blocklyObj, null);
@@ -368,8 +392,8 @@ window.makeScript = function() {
             //we've already added the top block
             if (target !== null) {
                 target.push([block._type]);
-            } else
-            {
+            }
+            else {
                 //set the default target
                 target = newScript[2];
             };
@@ -392,8 +416,8 @@ window.makeScript = function() {
             if (typeof block.statement !== 'undefined') {
                 //make a new target array
                 target[target.length - 1].push([])
-                //here we need to push a new target array
-                addBlock(block.statement.block, target[target.length - 1][target[target.length - 1].length-1]);
+                    //here we need to push a new target array
+                addBlock(block.statement.block, target[target.length - 1][target[target.length - 1].length - 1]);
             }
             if (typeof block.next !== 'undefined') {
                 //we have a next block, add it to the original target
@@ -486,14 +510,21 @@ window.makeScript = function() {
 
         // Copy the image contents to the canvas
         var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
+        var dataURL = '';
+        if (typeof img.src !== 'undefined') {
+            ctx.drawImage(img, 0, 0);
 
-        // Get the data-URL formatted image
-        // Firefox supports PNG and JPEG. You could check img.src to
-        // guess the original format, but be aware the using "image/jpg"
-        // will re-encode the image.
-        var dataURL = canvas.toDataURL("image/png");
+            // Get the data-URL formatted image
+            // Firefox supports PNG and JPEG. You could check img.src to
+            // guess the original format, but be aware the using "image/jpg"
+            // will re-encode the image.
+            dataURL = canvas.toDataURL("image/png");
+        } else
+        {
+            dataURL = img;
+        }
 
+        
         return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
     }
 
@@ -502,7 +533,7 @@ window.makeScript = function() {
         })
         .then(function(content) {
             // see FileSaver.js
-            saveAs(content, "argonEdit.sb2");
+            if (save) saveAs(content, "argonEdit.sb2");
         });
 };
 window.loadWorkspace = function() {

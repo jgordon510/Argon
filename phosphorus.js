@@ -286,7 +286,7 @@ var P = (function() {
     var xhr = new XMLHttpRequest;
     //this will allow audio files to load
     //might need to be forked for other stuff
-    xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
+    xhr.overrideMimeType("text/plain; charset=x-user-defined");
     xhr.open('GET', url, true);
     xhr.onprogress = function(e) {
       request.progress(e.loaded, e.total, e.lengthComputable);
@@ -325,6 +325,7 @@ var P = (function() {
   };
 
   IO.loadScratchr2Project = function(id, callback, self) {
+
     var request = new CompositeRequest;
 
     IO.init(request);
@@ -353,6 +354,8 @@ var P = (function() {
       try {
         // console.log(JSON.stringify(json.children[0].sounds[0].soundID))
         IO.loadProject(json);
+
+        // Argon.resetData = IO.loadProject
         Argon.loadedJSON = json;
 
         if (callback) request.onLoad(callback.bind(self));
@@ -380,6 +383,7 @@ var P = (function() {
     request.defer = true;
     request.add(P.IO.load('https://crossorigin.me/https://scratch.mit.edu/projects/' + id + '/').onLoad(function(data) {
       var m = /<title>\s*(.+?)(\s+on\s+Scratch)?\s*<\/title>/.exec(data);
+
       if (callback) request.onLoad(callback.bind(self));
       if (m) {
         var d = document.createElement('div');
@@ -395,6 +399,7 @@ var P = (function() {
   };
 
   IO.loadJSONProject = function(json, callback, self) {
+
     var request = new CompositeRequest;
     IO.init(request);
 
@@ -419,47 +424,68 @@ var P = (function() {
   };
 
   IO.loadSB2Project = function(ab, callback, self) {
+
     var request = new CompositeRequest;
     IO.init(request);
 
     try {
-      IO.zip = new JSZip(ab);
-      var json = IO.parseJSONish(IO.zip.file('project.json').asText());
-      IO.loadProject(json);
-      if (callback) request.onLoad(callback.bind(self));
-      if (request.isDone) {
-        request.load(new Stage().fromJSON(json));
-      }
-      else {
-        request.defer = false;
-        request.getResult = function() {
-          return new Stage().fromJSON(json);
-        };
-      }
+      //IO.zip = new JSZip(ab);
+      //IO.parseJSONish(IO.zip.file('project.json').asText());
+
+
+      JSZip.loadAsync(ab).then(function(zip) {
+        // ...
+        IO.zip = zip;
+        IO.zip.file('project.json').async("string")
+          .then(function(jsonText) {
+            // use content
+            var json = JSON.parse(jsonText)
+            console.log()
+            Argon.loadedJSON = json
+            IO.loadProject(json);
+
+            if (callback) request.onLoad(callback.bind(self));
+            if (request.isDone) {
+              request.load(new Stage().fromJSON(json));
+            }
+            else {
+              request.defer = false;
+              request.getResult = function() {
+                return new Stage().fromJSON(json);
+              };
+            }
+          });
+      });
+
+      // here, zip won't have (yet) the updated content
+      // IO.zip.file('project.json').async("string")
+      //   .then(function(json) {
+      //     // use content
+      //   });
+
     }
     catch (e) {
       request.error(e);
     }
-
     return request;
   };
 
   IO.loadSB2File = function(f, callback, self) {
     var cr = new CompositeRequest;
-    console.log(cr)
     cr.defer = true;
     var request = new Request;
     cr.add(request);
     var reader = new FileReader;
     reader.onloadend = function() {
+
       cr.defer = true;
       cr.add(IO.loadSB2Project(reader.result, function(result) {
+
         cr.defer = false;
         cr.getResult = function() {
           return result;
         };
         cr.update();
-        console.log(cr)
       }));
       request.load();
     };
@@ -467,11 +493,12 @@ var P = (function() {
       request.progress(e.loaded, e.total, e.lengthComputable);
     };
     reader.readAsArrayBuffer(f);
+
     if (callback) cr.onLoad(callback.bind(self));
     return cr;
   };
 
-  IO.loadProject = function(data) {
+  IO.loadProject = function(data, cb) {
     Argon.loadBlockly(); //make the blockly div
     //setup all the data stuff
     //spriteData is setup elsewhere in phosphorous
@@ -482,8 +509,12 @@ var P = (function() {
     //render the first sprite
     Argon.makeSelector();
     Argon.renderBlocks(JSON.parse(JSON.stringify(Argon.spriteData[0])));
+    if (typeof cb !== 'undefined') {
+      cb();
+    }
   };
 
+  Argon.loadProject = IO.loadProject
   IO.wavBuffers = Object.create(null);
   IO.loadWavs = function() {
     if (!audioContext) return;
@@ -667,7 +698,8 @@ var P = (function() {
   IO.loadBase = function(data) {
     //pass a copy of the data for argon to render the blocks
     Argon.spriteData.push(JSON.parse(JSON.stringify(data)));
-
+    Argon.player.data = data;
+    Argon.IO = IO;
     data.scripts = data.scripts || [];
     data.costumes = IO.loadArray(data.costumes, IO.loadCostume);
     data.sounds = IO.loadArray(data.sounds, IO.loadSound);
@@ -823,149 +855,242 @@ var P = (function() {
 
   IO.loadMD5 = function(md5, id, callback, isAudio) {
     if (IO.zip) {
-      var f = isAudio ? IO.zip.file(id + '.wav') : IO.zip.file(id + '.gif') || IO.zip.file(id + '.png') || IO.zip.file(id + '.jpg') || IO.zip.file(id + '.svg');
-      md5 = f.name;
-    }
-
-    var ext = md5.split('.').pop();
-    if (ext === 'svg') {
-      var lastIndex = Argon.imgList.length;
-      Argon.imgList.push(null)
-      var cb = function(source) {
-        var div = document.createElement('div');
-        Argon.imgList[lastIndex] = {
-          type: ext,
-          data: source
-        };
-        //div.innerHTML = source;
-        //var svg = div.getElementsByTagName('svg')[0];
-        //div.innerHTML = source.replace(/(<\/?)svg:/g, '$1');
-        //var svg = div.firstElementChild;		
-        var svg = new DOMParser().parseFromString(source, 'image/svg+xml').firstElementChild;
-        svg.id = 'svg' + Math.random();
-        if (svg.getAttribute('width') === '0' || svg.getAttribute('height') === '0') {
-          svg = document.createElementNS('https://www.w3.org/2000/svg', svg.localName);
-        }
-        else svg = IO.fixSVG(svg, svg);
-
-        //svg.style.visibility = 'hidden';
-        //svg.style.position = 'absolute';
-        //svg.style.left = '-10000px';
-        //svg.style.top = '-10000px';
+        //the new version of jszip requires async functions
+      if (isAudio) {
+        //we want an arraybuffer
+        var lastIndex = Argon.wavList.length;
+        Argon.wavList.push(null);
+        IO.zip.file(id + '.wav').async("string")
+          .then(function(f) {
+              //this is just needed for the extension
+            md5 = 'temp.wav';
+            Argon.wavList[lastIndex] = {
+              type: 'wav',
+              data: f
+            };
+            finishLoad(f);
 
 
-        document.body.appendChild(svg);
+          });
 
-        var viewBox = svg.viewBox.baseVal;
 
-        if (viewBox && (viewBox.x || viewBox.y)) {
-          //svg.width.baseVal.value = viewBox.width - viewBox.x;
-          //svg.height.baseVal.value = viewBox.height - viewBox.y;
-          //viewBox.x = 0;
-          //viewBox.y = 0;
-          //viewBox.width = 0;
-          //viewBox.height = 0;
-          var bb = svg.getBBox();
-          viewBox.width = svg.width.baseVal.value = Math.ceil(bb.x + bb.width + 1);
-          viewBox.height = svg.height.baseVal.value = Math.ceil(bb.y + bb.height + 1);
-          viewBox.x = 0;
-          viewBox.y = 0;
-        }
 
-        //IO.fixSVG(svg, svg);
-        //while (div.firstChild) div.removeChild(div.lastChild);
-        //div.appendChild(svg);
-        //svg.style.visibility = 'visible';
-        //svg.style.cssText = '';
 
-        svg.style['image-rendering'] = '-moz-crisp-edges';
-        svg.style['image-rendering'] = 'pixelated';
-
-        //svg.style.overflow = 'visible';
-        //svg.style.width = '100%';
-
-        var request = new Request;
-        var image = new Image;
-
-        var newSource = (new XMLSerializer()).serializeToString(svg)
-          //svg.id = 'svg' + Math.random();
-          // console.log(md5, 'data:image/svg+xml;base64,' + btoa(source), 'data:image/svg+xml;base64,' + btoa(newSource));
-        image.src = 'data:image/svg+xml;base64,' + btoa(newSource);
-
-        //svg.style.display = 'none';
-
-        image.onload = function() {
-          if (callback) callback(image);
-          request.load();
-        };
-        image.onerror = function(e) {
-          //console.error(e, image);
-          //console.log(image.src);
-          console.error(md5, image.src);
-          request.error(new Error());
-        };
-        IO.projectRequest.add(request);
-      };
-      if (IO.zip) {
-        cb(f.asText());
       }
       else {
-        IO.projectRequest.add(IO.load(IO.ASSET_URL + md5 + '/get/', cb));
-      }
-    }
-    else if (ext === 'wav') {
-      var request = new Request;
-      var lastIndex = Argon.wavList.length;
-      Argon.wavList.push(null);
-      var cb = function(ab) {
-        IO.decodeAudio(ab, function(buffer) {
-          //add the audio data to the list
-          IO.load(IO.ASSET_URL + md5 + '/get/', addToList);
-          function addToList(e) {
-            Argon.wavList[lastIndex] = {
-              type: ext,
-              data: e
-            };
+        //similar, but in a forEach
+        var exts = ['.gif', '.png', '.jpg', '.svg'];
+        exts.forEach(function(ext) {
+          //this will only run on the matching name
+          if (IO.zip.file(id + ext) !== null) {
+            var type = "base64"
+            if (ext === '.svg') type = 'string'
+            var lastIndex = Argon.imgList.length;
+            Argon.imgList.push(null);
+            IO.zip.file(id + ext).async(type)
+              .then(function(f) {
+
+                md5 = 'temp' + ext;
+                finishLoad(f, lastIndex);
+              });
           }
-          callback(buffer);
-          request.load(buffer);
         });
       }
-      IO.projectRequest.add(request);
-      if (IO.zip) {
-        var audio = new Audio;
-        var ab = f.asArrayBuffer();
-        cb(ab);
-      }
-      else {
-        IO.projectRequest.add(IO.load(IO.ASSET_URL + md5 + '/get/', cb, null, 'arraybuffer'));
-      }
+
     }
     else {
-      if (IO.zip) {
-        var request = new Request;
-        var image = new Image;
-        image.onload = function() {
-          if (callback) callback(image);
-          request.load();
+      finishLoad();
+    }
+
+    function finishLoad(f, lastIndex) {
+      var ext = md5.split('.').pop();
+      if (ext === 'svg') {
+
+        if (!IO.zip) {
+          lastIndex = Argon.imgList.length;
+          Argon.imgList.push(null)
+        }
+        var cb = function(source) {
+          var div = document.createElement('div');
+          Argon.imgList[lastIndex] = {
+            type: ext,
+            data: source
+          };
+          //div.innerHTML = source;
+          //var svg = div.getElementsByTagName('svg')[0];
+          //div.innerHTML = source.replace(/(<\/?)svg:/g, '$1');
+          //var svg = div.firstElementChild;		
+          var svg = new DOMParser().parseFromString(source, 'image/svg+xml').firstElementChild;
+          svg.id = 'svg' + Math.random();
+          if (svg.getAttribute('width') === '0' || svg.getAttribute('height') === '0') {
+            svg = document.createElementNS('https://www.w3.org/2000/svg', svg.localName);
+          }
+          else svg = IO.fixSVG(svg, svg);
+
+          //svg.style.visibility = 'hidden';
+          //svg.style.position = 'absolute';
+          //svg.style.left = '-10000px';
+          //svg.style.top = '-10000px';
+
+
+          document.body.appendChild(svg);
+
+          var viewBox = svg.viewBox.baseVal;
+
+          if (viewBox && (viewBox.x || viewBox.y)) {
+            //svg.width.baseVal.value = viewBox.width - viewBox.x;
+            //svg.height.baseVal.value = viewBox.height - viewBox.y;
+            //viewBox.x = 0;
+            //viewBox.y = 0;
+            //viewBox.width = 0;
+            //viewBox.height = 0;
+            var bb = svg.getBBox();
+            viewBox.width = svg.width.baseVal.value = Math.ceil(bb.x + bb.width + 1);
+            viewBox.height = svg.height.baseVal.value = Math.ceil(bb.y + bb.height + 1);
+            viewBox.x = 0;
+            viewBox.y = 0;
+          }
+
+          //IO.fixSVG(svg, svg);
+          //while (div.firstChild) div.removeChild(div.lastChild);
+          //div.appendChild(svg);
+          //svg.style.visibility = 'visible';
+          //svg.style.cssText = '';
+
+          svg.style['image-rendering'] = '-moz-crisp-edges';
+          svg.style['image-rendering'] = 'pixelated';
+
+          //svg.style.overflow = 'visible';
+          //svg.style.width = '100%';
+
+          var request = new Request;
+          var image = new Image;
+
+          var newSource = (new XMLSerializer()).serializeToString(svg)
+            //svg.id = 'svg' + Math.random();
+            // console.log(md5, 'data:image/svg+xml;base64,' + btoa(source), 'data:image/svg+xml;base64,' + btoa(newSource));
+          image.src = 'data:image/svg+xml;base64,' + btoa(newSource);
+
+          //svg.style.display = 'none';
+
+          image.onload = function() {
+            if (callback) callback(image);
+            request.load();
+          };
+          image.onerror = function(e) {
+            //console.error(e, image);
+            //console.log(image.src);
+            console.error(md5, image.src);
+            request.error(new Error());
+          };
+          IO.projectRequest.add(request);
         };
-        image.src = 'data:image/' + (ext === 'jpg' ? 'jpeg' : ext) + ';base64,' + btoa(f.asBinary());
+        if (IO.zip) {
+          cb(f);
+        }
+        else {
+          IO.projectRequest.add(IO.load(IO.ASSET_URL + md5 + '/get/', cb));
+        }
+      }
+      else if (ext === 'wav') {
+        var request = new Request;
+        var lastIndex = Argon.wavList.length;
+        if (!IO.zip) Argon.wavList.push(null);
+        var cb = function(ab) {
+          //zip files have a string incoming that needs to be converted
+          //the string is still stored in the json
+          if(typeof ab === 'string') ab = stringToArrayBuffer(ab);
+
+          IO.decodeAudio(ab, function(buffer) {
+            //add the audio data to the list
+            if (!IO.zip) {
+              IO.load(IO.ASSET_URL + md5 + '/get/', addToList);
+            }
+
+            function addToList(e) {
+              Argon.wavList[lastIndex] = {
+                type: ext,
+                data: e
+              };
+            }
+            callback(buffer);
+            request.load(buffer);
+          });
+
+          //this is used to convert the string back to an array buffer
+          //https://stackoverflow.com/a/36488458/4766405
+          function stringToArrayBuffer(str) {
+            if (/[\u0080-\uffff]/.test(str)) {
+              var arr = new Array(str.length);
+              for (var i = 0, j = 0, len = str.length; i < len; ++i) {
+                var cc = str.charCodeAt(i);
+                if (cc < 128) {
+                  //single byte
+                  arr[j++] = cc;
+                }
+                else {
+                  //UTF-8 multibyte
+                  if (cc < 2048) {
+                    arr[j++] = (cc >> 6) | 192;
+                  }
+                  else {
+                    arr[j++] = (cc >> 12) | 224;
+                    arr[j++] = ((cc >> 6) & 63) | 128;
+                  }
+                  arr[j++] = (cc & 63) | 128;
+                }
+              }
+              var byteArray = new Uint8Array(arr);
+            }
+            else {
+              var byteArray = new Uint8Array(str.length);
+              for (var i = str.length; i--;)
+                byteArray[i] = str.charCodeAt(i);
+            }
+            return byteArray.buffer;
+          }
+        }
         IO.projectRequest.add(request);
+        if (IO.zip) {
+          var audio = new Audio;
+          cb(f);
+        }
+        else {
+          IO.projectRequest.add(IO.load(IO.ASSET_URL + md5 + '/get/', cb, null, 'arraybuffer'));
+        }
       }
       else {
-        var lastIndex = Argon.imgList.length;
-        Argon.imgList.push(null);
+        if (IO.zip) {
+          var request = new Request;
+          var image = new Image;
+          image.onload = function() {
+            if (callback) callback(image);
+            request.load();
+          };
+          image.src = 'data:image/' + (ext === 'jpg' ? 'jpeg' : ext) + ';base64,' + f;
+          Argon.imgList[lastIndex] = {
+            type: ext,
+            data: image.src
+          };
+          IO.projectRequest.add(request);
+        }
+        else {
+          var lastIndex = Argon.imgList.length;
+          console.log("here")
+          Argon.imgList.push(null);
 
-        IO.projectRequest.add(
-          IO.loadImage(IO.ASSET_URL + md5 + '/get/', function(result) {
-            Argon.imgList[lastIndex] = {
-              type: ext,
-              data: result
-            };
-            console.log(callback)
-            callback(result);
+          IO.projectRequest.add(
+            IO.loadImage(IO.ASSET_URL + md5 + '/get/', function(result) {
+              Argon.imgList[lastIndex] = {
+                type: ext,
+                data: result
+              };
+              console.log(result)
+              console.log(callback)
+              callback(result);
 
-          }));
+            }));
+        }
       }
     }
   };
@@ -2726,6 +2851,7 @@ P.compile = (function() {
     };
 
     var delay = function() {
+
       source += 'return;\n';
       label();
     };
@@ -3827,6 +3953,7 @@ P.compile = (function() {
     };
 
     var source = '';
+
     var startfn = object.fns.length;
     var fns = [0];
 
@@ -3847,6 +3974,7 @@ P.compile = (function() {
     for (var i = 1; i < script.length; i++) {
       compile(script[i]);
     }
+    //Argon.compile = compileScripts;
 
     if (script[0][0] === 'procDef') {
       source += 'endCall();\n';
@@ -3916,7 +4044,9 @@ P.compile = (function() {
       return P.runtime.scopedEval(result);
     };
 
+
     for (var i = 0; i < fns.length; i++) {
+
       object.fns.push(createContinuation(source.slice(fns[i])));
     }
 
@@ -4548,12 +4678,22 @@ P.runtime = (function() {
       this.trigger('whenGreenFlag');
     };
 
+    window.interval = null;
     P.Stage.prototype.start = function() {
+      console.log("starting")
       this.isRunning = true;
-      if (this.interval) return;
+      if (this.interval) {
+        return;
+      }
       addEventListener('error', this.onError);
       this.baseTime = Date.now();
       this.interval = setInterval(this.step.bind(this), 1000 / this.framerate);
+      if (Argon.refreshing) {
+        Argon.refreshing = false;
+        console.log("flag click!")
+        Argon.flagClick();
+      }
+
     };
 
     P.Stage.prototype.pause = function() {
@@ -4564,6 +4704,7 @@ P.runtime = (function() {
         removeEventListener('error', this.onError);
       }
       this.isRunning = false;
+
     };
 
     P.Stage.prototype.stopAll = function() {
@@ -4596,6 +4737,7 @@ P.runtime = (function() {
       self = this;
       VISUAL = false;
       var start = Date.now();
+
       do {
         var queue = this.queue;
         for (THREAD = 0; THREAD < queue.length; THREAD++) {
@@ -4609,9 +4751,16 @@ P.runtime = (function() {
             R = STACK.pop();
             queue[THREAD] = undefined;
             WARP = 0;
+            //this checks to see if any old stages are left over
+            //there might be a better way to check, but
+            //it will be missing the dotPen function if it's old
+            if (typeof S.dotPen === 'undefined') {
+              return;
+            }
             while (IMMEDIATE) {
               var fn = IMMEDIATE;
               IMMEDIATE = null;
+              //console.log(fn)
               fn();
             }
             STACK.push(R);
@@ -4621,7 +4770,7 @@ P.runtime = (function() {
         for (var i = queue.length; i--;) {
           if (!queue[i]) queue.splice(i, 1);
         }
-      } while ((self.isTurbo || !VISUAL) && Date.now() - start < 1000 / this.framerate && queue.length);
+      } while (!Argon.refreshing && (self.isTurbo || !VISUAL) && Date.now() - start < 1000 / this.framerate && queue.length);
       this.draw();
       S = null;
     };

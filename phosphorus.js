@@ -356,10 +356,12 @@ var P = (function() {
         IO.loadProject(json);
 
         // Argon.resetData = IO.loadProject
+        console.log(JSON.parse(JSON.stringify(json)))
         Argon.loadedJSON = json;
 
         if (callback) request.onLoad(callback.bind(self));
         if (request.isDone) {
+          
           request.load(new Stage().fromJSON(json));
         }
         else {
@@ -440,8 +442,8 @@ var P = (function() {
           .then(function(jsonText) {
             // use content
             var json = JSON.parse(jsonText)
-            console.log()
             Argon.loadedJSON = json
+            console.log(JSON.parse(JSON.stringify(json)))
             IO.loadProject(json);
 
             if (callback) request.onLoad(callback.bind(self));
@@ -1673,6 +1675,7 @@ var P = (function() {
     this.stopSounds();
   };
 
+  
   Stage.prototype.removeAllClones = function() {
     var i = this.children.length;
     while (i--) {

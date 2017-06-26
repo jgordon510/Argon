@@ -45,7 +45,7 @@ P.player = (function() {
   Argon.flagClick = flagClick
   
   Argon.stopAll = function stopAll () {
-    stage.stopAll();  
+    stage.pause();  
   };
 
   function flagClick(e) {
@@ -204,6 +204,7 @@ P.player = (function() {
   document.addEventListener("webkitfullscreenchange", function() {
     if (isFullScreen !== document.webkitIsFullScreen) fullScreenClick();
   });
+
 
   function load(id, cb, titleCallback) {
     P.player.projectId = id;

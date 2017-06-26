@@ -1,0 +1,22 @@
+[debug] [2017-06-26T03:45:50.958Z] ----------------------------------------------------------------------
+[debug] [2017-06-26T03:45:50.961Z] Command:      /home/ubuntu/.nvm/versions/node/v4.7.3/bin/node /home/ubuntu/.nvm/versions/node/v4.7.3/bin/firebase deploy
+[debug] [2017-06-26T03:45:50.962Z] CLI Version:  3.9.1
+[debug] [2017-06-26T03:45:50.962Z] Platform:     linux
+[debug] [2017-06-26T03:45:50.962Z] Node Version: v4.7.3
+[debug] [2017-06-26T03:45:50.962Z] Time:         Mon Jun 26 2017 03:45:50 GMT+0000 (UTC)
+[debug] [2017-06-26T03:45:50.963Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-06-26T03:45:50.977Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-06-26T03:45:50.977Z] > authorizing via signed-in user
+[debug] [2017-06-26T03:45:50.980Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/argon-1641e  
+ Mon Jun 26 2017 03:45:50 GMT+0000 (UTC)
+[debug] [2017-06-26T03:45:51.200Z] <<< HTTP RESPONSE 200
+[debug] [2017-06-26T03:45:51.202Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/argon-1641e/tokens  
+ Mon Jun 26 2017 03:45:51 GMT+0000 (UTC)
+[debug] [2017-06-26T03:45:51.347Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'argon-1641e'...
+[info] 
+[info] i  deploying database, hosting
+[info] ✔  database: rules ready to deploy.
+[info] i  hosting: preparing / directory for upload...

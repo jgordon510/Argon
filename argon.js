@@ -20,6 +20,8 @@ var Argon = {
             Argon.refreshing = true;
             Argon.imgList = [];
             Argon.wavList = [];
+            console.log(Argon.loadedJSON)
+            P.player.load()
             Argon.loadProject(Argon.loadedJSON);
         }
     },
@@ -411,16 +413,17 @@ window.makeScript = function(save) {
                     block.value.forEach(function(value, i) {
 
                         if (typeof value.block.field !== 'undefined') {
-
+                            console.log(value.block.field.__text)
+                            //if (!isNaN(value.block.field.__text)) value.block.field.__text = parseInt(value.block.field.__text);
                             if (value.block.field._name === "FIELDNAME") {
                                 target[target.length - 1].push(value.block.field.__text);
                             }
                             else {
 
                                 console.log(value.block)
-                                
+
                                 var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:', 'setVar:to:', 'changeVar'];
-                                if (dropdownList.indexOf(target[target.length-1][0]) === -1) {
+                                if (dropdownList.indexOf(target[target.length - 1][0]) === -1) {
                                     target[target.length - 1].push(["readVariable", value.block.field.__text]);
                                 }
                                 else {
@@ -441,8 +444,10 @@ window.makeScript = function(save) {
                     });
                 }
                 else {
-                    console.log(block)
                     if (block.value.block._type === 'input') {
+                        console.log(block.value.block.field.__text)
+                        //if (!isNaN(/^\d+$/.test(block.value.block.field.__text))) block.value.block.field.__text = parseInt(block.value.block.field.__text)
+                        console.log(block.value.block.field.__text)
                         target[target.length - 1].push(block.value.block.field.__text);
                     }
                     else {

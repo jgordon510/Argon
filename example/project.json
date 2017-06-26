@@ -1,13 +1,9 @@
 {
 	"objName": "Stage",
-	"variables": [{
-			"name": "length",
-			"value": 0,
-			"isPersistent": false
-		}],
+	"scripts": [[75, 47, [["whenGreenFlag"]]]],
 	"sounds": [{
 			"soundName": "pop",
-			"soundID": 1,
+			"soundID": 0,
 			"md5": "83a9787d4cb6f3b7632b4ddfebf74367.wav",
 			"sampleCount": 258,
 			"rate": 11025,
@@ -15,13 +11,21 @@
 		}],
 	"costumes": [{
 			"costumeName": "backdrop1",
+			"baseLayerID": 2,
+			"baseLayerMD5": "e32c12d9df17757daff630cf6152144a.png",
+			"bitmapResolution": 2,
+			"rotationCenterX": 480,
+			"rotationCenterY": 360
+		},
+		{
+			"costumeName": "backdrop2",
 			"baseLayerID": 3,
-			"baseLayerMD5": "ad53b7aeb08c97c2f2c4f2f528a086f5.png",
-			"bitmapResolution": 1,
-			"rotationCenterX": 240,
-			"rotationCenterY": 180
+			"baseLayerMD5": "b61b1077b0ea1931abee9dbbfa7903ff.png",
+			"bitmapResolution": 2,
+			"rotationCenterX": 480,
+			"rotationCenterY": 360
 		}],
-	"currentCostumeIndex": 0,
+	"currentCostumeIndex": 1,
 	"penLayerMD5": "5c81a336fab8be57adc039a8a2b33ca9.png",
 	"penLayerID": 0,
 	"tempoBPM": 60,
@@ -29,41 +33,61 @@
 	"children": [{
 			"objName": "Sprite1",
 			"variables": [{
-					"name": "local",
+					"name": "distance",
+					"value": "105",
+					"isPersistent": false
+				},
+				{
+					"name": "gen",
 					"value": 0,
 					"isPersistent": false
 				}],
-			"scripts": [[63, 15, [["whenGreenFlag"], ["setVar:to:", "length", 0], ["setVar:to:", "local", "30"]]]],
+			"scripts": [[10,
+					10,
+					[["whenGreenFlag"],
+						["clearPenTrails"],
+						["setVar:to:", "gen", 0],
+						["setVar:to:", "distance", "105"],
+						["setSizeTo:", 60],
+						["gotoX:y:", 0, -40],
+						["heading:", 240],
+						["doRepeat", 3, [["turnRight:", 120], ["createCloneOf", "_myself_"]]]]],
+				[185,
+					10,
+					[["whenCloned"],
+						["wait:elapsed:from:", 1],
+						["changeVar:by:", "gen", 1],
+						["forward:", ["readVariable", "distance"]],
+						["setVar:to:", "distance", ["\/", ["readVariable", "distance"], 2]],
+						["setSizeTo:", ["\/", ["scale"], 2]],
+						["heading:", 240],
+						["doIf",
+							["<", ["readVariable", "gen"], "8"],
+							[["doRepeat", 3, [["turnRight:", 120], ["createCloneOf", "_myself_"]]]]],
+						["stampCostume"],
+						["deleteClone"]]]],
 			"sounds": [{
-					"soundName": "meow",
+					"soundName": "pop",
 					"soundID": 0,
-					"md5": "83c36d806dc92327b9e7049a565c6bff.wav",
-					"sampleCount": 18688,
-					"rate": 22050,
+					"md5": "83a9787d4cb6f3b7632b4ddfebf74367.wav",
+					"sampleCount": 258,
+					"rate": 11025,
 					"format": ""
 				}],
 			"costumes": [{
-					"costumeName": "costume1",
+					"costumeName": "1200px-Green_equilateral_triangle_point_up.svg",
 					"baseLayerID": 1,
-					"baseLayerMD5": "09dc888b0b7df19f70d81588ae73420e.svg",
+					"baseLayerMD5": "f80b7c3689f497116e12da4129facf26.svg",
 					"bitmapResolution": 1,
-					"rotationCenterX": 47,
-					"rotationCenterY": 55
-				},
-				{
-					"costumeName": "costume2",
-					"baseLayerID": 2,
-					"baseLayerMD5": "3696356a03a8d938318876a593572843.svg",
-					"bitmapResolution": 1,
-					"rotationCenterX": 47,
-					"rotationCenterY": 55
+					"rotationCenterX": 155,
+					"rotationCenterY": 89
 				}],
 			"currentCostumeIndex": 0,
 			"scratchX": 0,
-			"scratchY": 0,
-			"scale": 1,
-			"direction": 90,
-			"rotationStyle": "normal",
+			"scratchY": -40,
+			"scale": 0.6,
+			"direction": -120,
+			"rotationStyle": "none",
 			"isDraggable": false,
 			"indexInLibrary": 1,
 			"visible": true,
@@ -71,11 +95,11 @@
 			}
 		},
 		{
-			"target": "Stage",
+			"target": "Sprite1",
 			"cmd": "getVar:",
-			"param": "length",
+			"param": "distance",
 			"color": 15629590,
-			"label": "length",
+			"label": "Sprite1: distance",
 			"mode": 1,
 			"sliderMin": 0,
 			"sliderMax": 100,
@@ -87,25 +111,25 @@
 		{
 			"target": "Sprite1",
 			"cmd": "getVar:",
-			"param": "local",
+			"param": "gen",
 			"color": 15629590,
-			"label": "Sprite1: local",
+			"label": "Sprite1: gen",
 			"mode": 1,
 			"sliderMin": 0,
 			"sliderMax": 100,
 			"isDiscrete": true,
 			"x": 5,
 			"y": 32,
-			"visible": true
+			"visible": false
 		}],
 	"info": {
-		"videoOn": false,
-		"projectID": "167245897",
-		"flashVersion": "LNX 25,0,0,171",
+		"projectID": "118550002",
+		"spriteCount": 1,
 		"userAgent": "Mozilla\/5.0 (X11; CrOS x86_64 9334.72.0) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/58.0.3029.140 Safari\/537.36",
-		"scriptCount": 1,
-		"swfVersion": "v456",
+		"videoOn": false,
+		"flashVersion": "LNX 25,0,0,171",
 		"hasCloudData": false,
-		"spriteCount": 1
+		"swfVersion": "v456",
+		"scriptCount": 3
 	}
 }

@@ -43,6 +43,10 @@ P.player = (function() {
     turbo.style.display = stage.isTurbo ? 'block' : 'none';
   }
   Argon.flagClick = flagClick
+  
+  Argon.stopAll = function stopAll () {
+    stage.stopAll();  
+  };
 
   function flagClick(e) {
     if (typeof e === 'undefined') {

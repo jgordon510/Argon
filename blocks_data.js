@@ -39,7 +39,6 @@ Blockly.Blocks.colour.HUE = Blockly.Constants.Colour.HUE;
 //this is an array to hold the vars
 //populated by default with variable1
 window.variableOptionsArray = [
-  ["variable1", "variable1"]
 ];
 
 //this function populates the dropdown with the array

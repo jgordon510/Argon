@@ -68,14 +68,14 @@ var Argon = {
     initData: function(data) {
         window.eventsData = data.events;
         if (typeof data.variables === 'undefined' || data.variables.length === 0) {
-            data.variables = ["variable1", "variable1"];
+            data.variables = [
+                ["variable1", "variable1"]
+            ];
         }
-        else window.variableOptionsArray = []; //clear the default "variable1" value
-        console.log(data)
+        window.variableOptionsArray = []; //clear the default "variable1" value
         data.variables.forEach(function(variable) {
-            window.variableOptionsArray.push([variable.name, variable.name]);
+            if (typeof variable.name !== 'undefined') window.variableOptionsArray.push([variable.name, variable.name]);
         });
-
         if (typeof data.lists === 'undefined' || data.lists.length === 0) {
             data.lists = ["list1", "list1"];
         }
@@ -98,12 +98,12 @@ var Argon = {
         //these variables/lists are for this sprite only
         if (typeof data.variables !== 'undefined') {
             data.variables.forEach(function(variable) {
-                window.variableOptionsArray.push([data.objName + ": " +variable.name, variable.name]);
+                window.variableOptionsArray.push([data.objName + ": " + variable.name, variable.name]);
             });
         }
         if (typeof data.lists !== 'undefined') {
             data.lists.forEach(function(list) {
-                window.listOptionsArray.push([data.objName + ": " +list.listName, list.listName]); //data.objName + ": " +list.listName
+                window.listOptionsArray.push([data.objName + ": " + list.listName, list.listName]); //data.objName + ": " +list.listName
             });
         }
         //the scriptObj holds the scripts once they've
@@ -176,9 +176,8 @@ var Argon = {
                             //check to make sure the block is formatted as an array
                             if (blockArray[i][0] === "readVariable" || blockArray[i][0] === "contentsOfList:") {
                                 //we're dealing with a variable
-                                console.log(blockArray[i][1])
                                 scriptObj.block.value.push({
-                                        
+
                                     _name: "VALUE" + i.toString(),
                                     block: {
                                         _type: blockArray[i][0],
@@ -262,12 +261,11 @@ var Argon = {
                             if (blockArray[0] === 'whenIReceive') type = 'message';
                             if (blockArray[0] === 'doBroadcastAndWait') type = 'message';
                             if (blockArray[0] === 'broadcast:') type = 'message';
-                            console.log(scriptObj.block)
                             var name = "FIELDNAME"
-                            if(type === 'readVariable')
-                            {
+                            if (type === 'readVariable') {
                                 name = "VARIABLE"
                             }
+
                             scriptObj.block.value.push({
                                 _name: "VALUE" + i.toString(),
                                 block: {
@@ -298,7 +296,6 @@ var Argon = {
                                 __text: blockArray[i].toString(),
                                 _name: name
                             });
-                            console.log(scriptObj.block.field)
                             if (typeof window.eventOptionsArray === 'undefined') window.eventOptionsArray = [];
                             if (blockArray[0] === 'whenIReceive' && window.eventOptionsArray.indexOf(blockArray[0]) === -1) {
                                 window.eventOptionsArray.push([blockArray[1], blockArray[1]]);
@@ -323,9 +320,9 @@ var Argon = {
 
         //make the xmlText for blockly
         var xmlText = x2js.json2xml_str(finalObject)
-        console.log(xmlText)
             //these will prevent null warnings on blank statements and values
         xmlText = replaceAll(xmlText, '<value/>', '');
+        xmlText = replaceAll(xmlText, '<next/>', '');
         xmlText = replaceAll(xmlText, '<statement/>', '');
 
         //this function replaces all occurences of a string within a string
@@ -396,9 +393,10 @@ window.makeScript = function(save) {
 
         //this function adds a block to the target block
         function addBlock(block, target) {
-            // console.log(block)
-            //add the block to the target
-            //we've already added the top block
+            console.log(block)
+                // console.log(block)
+                //add the block to the target
+                //we've already added the top block
             if (target !== null) {
                 target.push([block._type]);
             }
@@ -410,17 +408,53 @@ window.makeScript = function(save) {
                 //we need to see if it's an array of values or just a single one
                 //the single object can't be iterated
                 if (typeof block.value[1] !== 'undefined') {
-                    block.value.forEach(function(value) {
-                        target[target.length - 1].push(value.block.field.__text);
+                    block.value.forEach(function(value, i) {
+
+                        if (typeof value.block.field !== 'undefined') {
+
+                            if (value.block.field._name === "FIELDNAME") {
+                                target[target.length - 1].push(value.block.field.__text);
+                            }
+                            else {
+
+                                console.log(value.block)
+                                
+                                var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:', 'setVar:to:', 'changeVar'];
+                                if (dropdownList.indexOf(target[target.length-1][0]) === -1) {
+                                    target[target.length - 1].push(["readVariable", value.block.field.__text]);
+                                }
+                                else {
+                                    target[target.length - 1].push(value.block.field.__text);
+                                }
+
+
+
+                            }
+
+                        }
+                        else {
+                            console.log(value.block)
+                            console.log(target[target.length - 1].toString())
+                            addBlock(value.block, target[target.length - 1])
+                        }
+
                     });
                 }
                 else {
+                    console.log(block)
                     if (block.value.block._type === 'input') {
                         target[target.length - 1].push(block.value.block.field.__text);
                     }
                     else {
                         console.log("VARIABLE/LIST HANDLER")
-                        target[target.length - 1].push([block.value.block._type, block.value.block.field.__text]);
+                        console.log(block)
+                        if (typeof block.value.block.field !== 'undefined') {
+                            target[target.length - 1].push([block.value.block._type, block.value.block.field.__text]);
+                        }
+                        else {
+                            addBlock(block.value.block, target[target.length - 1])
+                        }
+
 
                     }
 
@@ -504,6 +538,7 @@ window.makeScript = function(save) {
         })
         //save it
     var zip = new JSZip();
+    console.log(JSON.parse(JSON.stringify(Argon.loadedJSON)))
     zip.file('project.json', JSON.stringify(Argon.loadedJSON));
 
     zip.file("0.png", null, {

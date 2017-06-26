@@ -23,6 +23,7 @@ var Argon = {
             Argon.wavList = [];
             console.log(Argon.loadedJSON)
             P.player.load()
+            
             Argon.loadProject(Argon.loadedJSON);
         }
     },
@@ -534,12 +535,12 @@ window.makeScript = function(save) {
     //probably other problems too
     Argon.loadedJSON.variables = [];
     window.variableOptionsArray.forEach(function(variable) {
-            // console.log(variable)
-            // Argon.loadedJSON.variables.push({
-            //     "name": variable[0],
-            //     "value": 0,
-            //     "isPersistent": false
-            // });
+            console.log(variable)
+            Argon.loadedJSON.variables.push({
+                "name": variable[0],
+                "value": 0,
+                "isPersistent": false
+            });
 
         })
         //save it

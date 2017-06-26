@@ -15,7 +15,8 @@ var Argon = {
     player: {
         refresh: function() {
             //TODO: forEach so we can save all sprites and stage
-            Argon.player.data.scripts = Argon.spriteData[0].scripts || [];
+            console.log()
+            //Argon.player.data.scripts = Argon.spriteData[0].scripts || [];
             window.makeScript(false);
             Argon.refreshing = true;
             Argon.imgList = [];
@@ -285,7 +286,7 @@ var Argon = {
                             if (typeof scriptObj.block.field === 'undefined') scriptObj.block.field = [];
                             var name = "VALUE" + i.toString();
                             //we need to treat variable, list, and event dropdowns a little differently
-                            var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:', 'setVar:to:', 'changeVar'];
+                            var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:', 'setVar:to:', 'changeVar', "changeVar:by:"];
                             //the dropdown is always in the first position; we just need to set the name prop 
                             //console.log(scriptObj.block)
                             // console.log(i,blockArray[0] )
@@ -414,7 +415,7 @@ window.makeScript = function(save) {
 
                         if (typeof value.block.field !== 'undefined') {
                             console.log(value.block.field.__text)
-                            //if (!isNaN(value.block.field.__text)) value.block.field.__text = parseInt(value.block.field.__text);
+                            if (!isNaN(value.block.field.__text)) value.block.field.__text = parseInt(value.block.field.__text);
                             if (value.block.field._name === "FIELDNAME") {
                                 target[target.length - 1].push(value.block.field.__text);
                             }
@@ -422,7 +423,7 @@ window.makeScript = function(save) {
 
                                 console.log(value.block)
 
-                                var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:', 'setVar:to:', 'changeVar'];
+                                var dropdownList = ['readVariable', 'contentsOfList:', 'getLine:ofList:', 'lineCountOfList:', 'list:contains:', 'showList:', 'hideList:', 'whenIReceive', 'doBroadcastAndWait', 'broadcast:', 'setVar:to:', 'changeVar', "changeVar:by:"];
                                 if (dropdownList.indexOf(target[target.length - 1][0]) === -1) {
                                     target[target.length - 1].push(["readVariable", value.block.field.__text]);
                                 }
@@ -446,7 +447,7 @@ window.makeScript = function(save) {
                 else {
                     if (block.value.block._type === 'input') {
                         console.log(block.value.block.field.__text)
-                        //if (!isNaN(/^\d+$/.test(block.value.block.field.__text))) block.value.block.field.__text = parseInt(block.value.block.field.__text)
+                        if (!isNaN(/^\d+$/.test(block.value.block.field.__text))) block.value.block.field.__text = parseInt(block.value.block.field.__text)
                         console.log(block.value.block.field.__text)
                         target[target.length - 1].push(block.value.block.field.__text);
                     }
@@ -533,12 +534,12 @@ window.makeScript = function(save) {
     //probably other problems too
     Argon.loadedJSON.variables = [];
     window.variableOptionsArray.forEach(function(variable) {
-            console.log(variable)
-            Argon.loadedJSON.variables.push({
-                "name": variable[0],
-                "value": 0,
-                "isPersistent": false
-            });
+            // console.log(variable)
+            // Argon.loadedJSON.variables.push({
+            //     "name": variable[0],
+            //     "value": 0,
+            //     "isPersistent": false
+            // });
 
         })
         //save it
